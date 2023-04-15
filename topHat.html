@@ -91,28 +91,39 @@
             TW.render();
         }
 
-        // create a head for hat size referen
-        // function createHead() {
-        //     // creates and returns a head object
-        //     var head = new THREE.Object3D();
-        //     var radius = params.headRadius;
-        //     var headGeometry = new THREE.SphereGeometry(radius, 10, 10);
-        //     var headMesh = new THREE.Mesh(headGeometry, headMaterial);
-        //     head.add(headMesh);
-        //     addHat(head, params);
-        //     scene.add(head);
-        // }
-
         // construct a renderer for the scene
         var renderer = new THREE.WebGLRenderer();
 
         // create the Scene object
         var scene = new THREE.Scene();
 
-        // create a head for reference and add to scene
-        
-
         TW.mainInit(renderer, scene);
+
+        function addSpotlights(){
+            // spotlight 1
+            spotlight1 = new THREE.SpotLight(new THREE.Color("white"));
+            spotlight1.position.set(5, 0, 20);
+            target1 = new THREE.Object3D();
+            target1.position.set(0, -3, 0);
+            spotlight1.target = target1;
+            scene.add(spotlight1);
+            scene.add(spotlight1.target);
+        }
+        addSpotlights()
+
+        var roomGeom = new THREE.BoxGeometry(20, 10, 10);
+        var materialArray = [];
+        // colors for [right wall, left wall, ceiling, floor, front wall, back wall]
+        var faceColors = [0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000];
+        for (var i = 0; i < 6; i++) {
+            materialArray.push(new THREE.MeshPhongMaterial({
+                color: faceColors[i],
+                side: THREE.BackSide
+          }));
+        }
+        var roomMesh = new THREE.Mesh(roomGeom, materialArray);
+        scene.add(roomMesh);
+
 
         TW.cameraSetup(renderer,
             scene,
