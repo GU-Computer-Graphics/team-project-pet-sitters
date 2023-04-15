@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>Top Hat</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 10px auto;
+            width: 80%;
+            height: 600px;
+        }
+    </style>
+
+    <script src="./js/three.js"></script>
+    <script src="./js/tw.js"></script>
+    <script src="./js/OrbitControls.js"></script>
+    <script src="./js/SceneUtils.js"></script>
+    <script src="./js/dat.gui.js"></script>
+
+</head>
+
+<body>
+    <script id="beaniecode">
+        // parameters that specify the geometrical structure of the top hat
+        var params = {
+            headRadius: 3,
+            hatHeight: 3, 
+            bottomHatRadius: 2.7,
+            hatRadius: 2.5,
+            hatRotation: 0,
+            zPlaneRotation: 0,
+            xPlaneRotation:0,
+            hatSeg: 1,
+            yHeadPosition: 9
+        };
+
+        function createBase(texture){
+            // create and return a Mesh for the hat
+            var radius = params.hatRadius;
+            var baseGeometry = new THREE.SphereGeometry(radius, 32, 16, 0, 6.29,0, 1.56);
+            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
+            var baseMesh = new THREE.Mesh(baseGeometry, silkMaterial);
+            return baseMesh;
+        }
+
+        function createPompom(texture){
+            // create and return a Mesh for the hat
+            var height = params.hatHeight;
+            var radius = params.hatRadius;
+            var baseGeometry = new THREE.SphereGeometry(1, 32, 16, 0, 6.29,0, 3.14);
+            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
+            var baseMesh = new THREE.Mesh(baseGeometry, silkMaterial);
+            return baseMesh;
+        }
+
+        function addHat(texture){
+            // adds all components of hat together
+            var hatframe = new THREE.Object3D();
+            var hat = createBase(texture[0]);
+            var pompom = createPompom(texture[1]);
+            hatframe.add(hat);
+            hatframe.add(pompom)
+            // calculate position for the center of the head
+            hat.position.y = -3;
+            hat.position.x = 0;
+            scene.add(hatframe);
+            TW.render();
+        }
+
+        // construct a renderer for the scene
+        var renderer = new THREE.WebGLRenderer();
+
+        // create the Scene object
+        var scene = new THREE.Scene();
+
+        // create a head for reference and add to scene
+            // create spotlights
+        function addSpotlights(){
+            // spotlight 1
+            spotlight1 = new THREE.SpotLight(new THREE.Color("white"));
+            spotlight1.position.set(5, 0, 20);
+            target1 = new THREE.Object3D();
+            target1.position.set(0, -3, 0);
+            spotlight1.target = target1;
+            scene.add(spotlight1);
+            scene.add(spotlight1.target);
+        }
+        addSpotlights()
+
+        TW.mainInit(renderer, scene);
+        // colors and materials for the top hat
+        var headMaterial = new THREE.MeshBasicMaterial({ color: 0xD08050 });
+        var blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        var goldMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700});
+
+        var roomGeom = new THREE.BoxGeometry(20, 10, 10);
+        var materialArray = [];
+        // colors for [right wall, left wall, ceiling, floor, front wall, back wall]
+        var faceColors = [0x375673, 0x375673, 0x3c4e3a, 0x99784d, 0x375673, 0x375673];
+        for (var i = 0; i < 6; i++) {
+            materialArray.push(new THREE.MeshPhongMaterial({
+                color: faceColors[i],
+                side: THREE.BackSide
+          }));
+        }
+        var roomMesh = new THREE.Mesh(roomGeom, materialArray);
+        scene.add(roomMesh);
+
+        TW.cameraSetup(renderer,
+            scene,
+            {
+                minx: -5, maxx: 5,
+                miny: -10, maxy: 15,
+                minz: -5, maxz: 5
+            });
+
+        TW.viewFromAboveFrontSide();
+
+        TW.loadTextures(["yarn.jpg", "pompom.jpg"],
+            function (texture) {
+                addHat(texture);
+            } );
+
+    </script>
+    <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
+
+</body>
+
+</html>
