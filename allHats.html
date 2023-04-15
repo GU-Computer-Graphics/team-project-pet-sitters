@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>Top Hat</title>
+    <title>Top Hat and Beanie for Cat</title>
     <style>
         canvas {
             display: block;
@@ -23,7 +23,7 @@
 </head>
 
 <body>
-    <script id="tophatcode">
+    <script id="allhatscode">
         // parameters that specify the geometrical structure of the top hat
         var params = {
             headRadius: 3,
@@ -48,7 +48,7 @@
             var height = params.hatHeight;
             var radius = params.hatRadius;
             var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
-            var silkMaterial = new THREE.MeshBasicMaterial({ color: "0xFFD700", map: texture});
+            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
             var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
             return hatMesh;
         }
@@ -56,7 +56,7 @@
             // create and return a Mesh for the bottom of the top hat
             var radius = params.bottomHatRadius;
             var hatGeometry = new THREE.CylinderGeometry(radius, radius, 0.45, 40, params.hatSeg);
-            var silkMaterial = new THREE.MeshBasicMaterial({ color: "0xFFD700", map: texture});
+            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
             var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
             return hatMesh;
         }
@@ -65,7 +65,7 @@
             // create and return a Mesh for the design of the hat
             var radius = params.hatRadius;
             var hatGeometry = new THREE.CylinderGeometry(radius + 0.1, radius + 0.1, 0.7, 40, params.hatSeg);
-            var silkMaterial = new THREE.MeshBasicMaterial({ color: "0xFFD700", map: texture});
+            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
             var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
             return hatMesh;
         }
@@ -112,7 +112,7 @@
             pompom.position.x = 10;
             scene.add(beanieFrame);
 
-            // calculate position for the center of the head
+            // calculate position for top hat
             hat.position.y = 3.8;
             hat.position.x = 0;
             bottomHat.position.y = 2.3;
@@ -133,7 +133,7 @@
 
         TW.mainInit(renderer, scene);
 
-        // create an ambient light
+        // create an ambient light for hats
         function addAmbientLight(){
             ambientLight = new THREE.AmbientLight();
             ambientLight.name = "ambientLight";
@@ -142,18 +142,20 @@
         }
         addAmbientLight();
 
-        // var roomGeom = new THREE.BoxGeometry(20, 10, 10);
-        // var materialArray = [];
-        // // colors for [right wall, left wall, ceiling, floor, front wall, back wall]
-        // var faceColors = [0x000000, 0x000000, 0x000000, 0x000000, 0x000000, 0x000000];
-        // for (var i = 0; i < 6; i++) {
-        //     materialArray.push(new THREE.MeshPhongMaterial({
-        //         color: faceColors[i],
-        //         side: THREE.BackSide
-        //   }));
-        // }
-        // var roomMesh = new THREE.Mesh(roomGeom, materialArray);
-        // scene.add(roomMesh);
+        // display for hats
+        var displayGeom = new THREE.BoxGeometry(20, 10, 10);
+        var materialArray = [];
+        var faceColors = [0x171A1A, 0x171A1A, 0x171A1A, 0x171A1A, 0x171A1A, 0x171A1A];
+        for (var i = 0; i < 6; i++) {
+            materialArray.push(new THREE.MeshPhongMaterial({
+                color: faceColors[i],
+                side: THREE.BackSide
+          }));
+        }
+        var displayMesh = new THREE.Mesh(displayGeom, materialArray);
+        displayMesh.position.x = 3.5;
+        displayMesh.position.y = 2.5;
+        scene.add(displayMesh);
 
 
         TW.cameraSetup(renderer,
@@ -164,8 +166,7 @@
                 minz: -5, maxz: 5
             });
 
-        // TW.viewFromAboveFrontSide();
-
+        // load textures for hats
         TW.loadTextures(["silk.jpeg", "yellowsilk.jpeg", "yarn.jpg", "pompom.jpg"],
             function (texture) {
                 addHat(texture);
