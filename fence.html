@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>The Fence</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 10px auto;
+            width: 80%;
+            height: 600px;
+        }
+    </style>
+
+    <script src="./js/three.js"></script>
+    <script src="./js/tw.js"></script>
+    <script src="./js/OrbitControls.js"></script>
+    <script src="./js/SceneUtils.js"></script>
+
+</head>
+
+<body>
+    <script id="Fence">
+
+        var colorMaterials = [new THREE.MeshPhongMaterial({
+                    color: new THREE.Color("black"),
+                    specular: new THREE.Color("white"),
+                    shininess: 10,
+                    flatShading: THREE.FlatShading,
+                    side: THREE.DoubleSide
+                }),
+                new THREE.MeshPhongMaterial({
+                    color: new THREE.Color("brown"),
+                    specular: new THREE.Color("white"),
+                    shininess: 10,
+                    flatShading: THREE.FlatShading,
+                    side: THREE.DoubleSide
+                }),
+                new THREE.MeshPhongMaterial({
+                    color: new THREE.Color("green"),
+                    specular: new THREE.Color("white"),
+                    shininess: 10,
+                    flatShading: THREE.FlatShading,
+                    side: THREE.DoubleSide
+                })];
+    
+
+        // create the Scene object
+        var scene = new THREE.Scene();
+
+         //add light
+        // add ambient light source
+        var ambLight = new THREE.AmbientLight(new THREE.Color("white"), 0.4);
+        scene.add(ambLight);
+
+        // add a rug to the scene
+        var rug = new THREE.Mesh(new THREE.PlaneGeometry(200, 140), colorMaterials[2]);
+        rug.position.set(100, 0, 70);
+        rug.rotation.set(-Math.PI / 2, 0, 0);
+        scene.add(rug);
+
+        var fence = new THREE.Mesh(new THREE.PlaneGeometry(200, 40), colorMaterials[1]);
+        fence.position.set(100, 15, 10);
+        fence.rotation.set(0, 0,Math.PI);
+        scene.add(fence);
+
+        var fence1 = new THREE.Mesh(new THREE.PlaneGeometry(140, 40), colorMaterials[1]);
+        fence1.position.set(0, 15, 70);
+        fence1.rotation.set(0,Math.PI/2,0);
+        scene.add(fence1);
+
+        var fence2 = new THREE.Mesh(new THREE.PlaneGeometry(140, 40), colorMaterials[1]);
+        fence2.position.set(200, 15, 70);
+        fence2.rotation.set(0, Math.PI/2, 0);
+        scene.add(fence2);
+       
+        // ====================================================================
+
+        var renderer = new THREE.WebGLRenderer();
+
+        TW.mainInit(renderer, scene);
+
+        TW.cameraSetup(renderer,
+            scene,
+            {
+                minx: 0, maxx: 200,
+                miny: 0, maxy: 180,
+                minz: 0, maxz: 140
+            });
+            
+
+        TW.viewFromAboveFrontSide();
+
+
+
+    </script>
+    <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
+
+</body>
+
+</html>
