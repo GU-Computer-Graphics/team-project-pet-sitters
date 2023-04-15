@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>Top Hat and Beanie for Cat</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 10px auto;
+            width: 80%;
+            height: 600px;
+        }
+    </style>
+
+    <script src="./js/three.js"></script>
+    <script src="./js/tw.js"></script>
+    <script src="./js/OrbitControls.js"></script>
+    <script src="./js/SceneUtils.js"></script>
+    <script src="./js/dat.gui.js"></script>
+
+</head>
+
+<body>
+    <script id="allhatscode">
+        // parameters that specify the geometrical structure of the top hat
+        var params = {
+            headRadius: 3,
+            hatHeight: 3, 
+            bottomHatRadius: 2.7,
+            hatRadius: 2,
+            hatRotation: 0,
+            zPlaneRotation: 0,
+            xPlaneRotation:0,
+            hatSeg: 1,
+            yHeadPosition: 9
+        };
+
+        // colors and materials for the top hat
+        var headMaterial = new THREE.MeshBasicMaterial({ color: 0xD08050 });
+        var blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+        var goldMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700});
+
+        // functions for top hat
+        function createHat(texture){
+            // create and return a Mesh for the top hat
+            var height = params.hatHeight;
+            var radius = params.hatRadius;
+            var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
+            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
+            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+            return hatMesh;
+        }
+        function createBottomHat(texture){
+            // create and return a Mesh for the bottom of the top hat
+            var radius = params.bottomHatRadius;
+            var hatGeometry = new THREE.CylinderGeometry(radius, radius, 0.45, 40, params.hatSeg);
+            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
+            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+            return hatMesh;
+        }
+
+        function createDesignHat(texture){
+            // create and return a Mesh for the design of the hat
+            var radius = params.hatRadius;
+            var hatGeometry = new THREE.CylinderGeometry(radius + 0.1, radius + 0.1, 0.7, 40, params.hatSeg);
+            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
+            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+            return hatMesh;
+        }
+
+        // functions for beanie
+        function createBase(texture){
+            // create and return a Mesh for the hat
+            var radius = params.hatRadius;
+            var baseGeometry = new THREE.SphereGeometry(radius, 32, 16, 0, 6.29,0, 1.56);
+            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
+            var baseMesh = new THREE.Mesh(baseGeometry, silkMaterial);
+            return baseMesh;
+        }
+
+        function createPompom(texture){
+            // create and return a Mesh for the hat
+            var height = params.hatHeight;
+            var radius = params.hatRadius;
+            var baseGeometry = new THREE.SphereGeometry(1, 32, 16, 0, 6.29,0, 3.14);
+            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
+            var baseMesh = new THREE.Mesh(baseGeometry, silkMaterial);
+            return baseMesh;
+        }
+
+        function addHat(texture){
+            // adds all components of top hat together
+            var hatframe = new THREE.Object3D();
+            var hat = createHat(texture[0]);
+            var bottomHat = createBottomHat(texture[0]);
+            var design = createDesignHat(texture[1]);
+            hatframe.add(hat);
+            hatframe.add(bottomHat);
+            hatframe.add(design);
+
+            // adds all components of beanie together
+            var beanieFrame = new THREE.Object3D();
+            var beanie = createBase(texture[2]);
+            var pompom = createPompom(texture[3]);
+            beanieFrame.add(beanie);
+            beanieFrame.add(pompom);
+            beanie.position.y = 2;
+            beanie.position.x = 10;
+            pompom.position.y = 4.5;
+            pompom.position.x = 10;
+            scene.add(beanieFrame);
+
+            // calculate position for top hat
+            hat.position.y = 3.8;
+            hat.position.x = 0;
+            bottomHat.position.y = 2.3;
+            bottomHat.position.x = 0;
+            design.position.y = 2.7;
+            design.position.x = 0;
+            hat.rotation.y = params.hatRotation;
+            bottomHat.rotation.y = params.hatRotation;
+            scene.add(hatframe);
+            TW.render();
+        }
+
+        // construct a renderer for the scene
+        var renderer = new THREE.WebGLRenderer();
+
+        // create the Scene object
+        var scene = new THREE.Scene();
+
+        TW.mainInit(renderer, scene);
+
+        // create an ambient light for hats
+        function addAmbientLight(){
+            ambientLight = new THREE.AmbientLight();
+            ambientLight.name = "ambientLight";
+            ambientLight.position.set(0, 0, 0);
+            scene.add(ambientLight);     
+        }
+        addAmbientLight();
+
+        // display for hats
+        var displayGeom = new THREE.BoxGeometry(20, 10, 10);
+        var materialArray = [];
+        var faceColors = [0x171A1A, 0x171A1A, 0x171A1A, 0x171A1A, 0x171A1A, 0x171A1A];
+        for (var i = 0; i < 6; i++) {
+            materialArray.push(new THREE.MeshPhongMaterial({
+                color: faceColors[i],
+                side: THREE.BackSide
+          }));
+        }
+        var displayMesh = new THREE.Mesh(displayGeom, materialArray);
+        displayMesh.position.x = 3.5;
+        displayMesh.position.y = 2.5;
+        scene.add(displayMesh);
+
+
+        TW.cameraSetup(renderer,
+            scene,
+            {
+                minx: -5, maxx: 5,
+                miny: -10, maxy: 15,
+                minz: -5, maxz: 5
+            });
+
+        // load textures for hats
+        TW.loadTextures(["silk.jpeg", "yellowsilk.jpeg", "yarn.jpg", "pompom.jpg"],
+            function (texture) {
+                addHat(texture);
+            } );
+
+    </script>
+    <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
+
+</body>
+
+</html>
