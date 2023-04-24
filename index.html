@@ -15,372 +15,314 @@
     </style>
 
     <script src="./js/three.js"></script>
-    <script src="./js/tw.js"></script>
     <script src="./js/OrbitControls.js"></script>
     <script src="./js/SceneUtils.js"></script>
-    <script src="js/dat.gui.js"></script>
 
 </head>
 
 <body>
-    <center><h1>Magic Three JS Mirror Below</h1></center>
-    <script id="teddybearcode">
+    <center><h1>Cat</h1></center>
+    <script>
+    function caty()
+    {
+        var cat=new THREE.Object3D();
 
-        //self portiat, making a clown 
+        var yellowMat = new THREE.MeshLambertMaterial ({
+      color: 0xfdd276, 
+      shading:THREE.FlatShading
+    });
+  
+    var pinkMat = new THREE.MeshLambertMaterial ({
+      color: 0xe0877e,//0xe0a79f, 
+      shading:THREE.FlatShading
+    });
+  
+    var redMat = new THREE.MeshLambertMaterial ({
+      color: 0x630d15, 
+      shading:THREE.FlatShading
+    });
+  
+    var whiteMat = new THREE.MeshLambertMaterial ({
+      color: 0xffffff, 
+      shading:THREE.FlatShading
+    });
+  
+    var blackMat = new THREE.MeshLambertMaterial ({
+      color: 0x000000, 
+      shading:THREE.FlatShading
+    });
+    var greyMat = new THREE.MeshLambertMaterial ({
+      color: 0x111111, 
+      shading:THREE.FlatShading
+    });
+    var lightGreyMat = new THREE.MeshLambertMaterial ({
+      color: 0x333333, 
+      shading:THREE.FlatShading
+    });
+    var brownMat = new THREE.MeshLambertMaterial ({
+      color: 0x2e2019,//0x4b342a, 
+      shading:THREE.FlatShading
+    });
+  
+    var lightBrownMat = new THREE.MeshLambertMaterial ({
+      color: 0x664f4a, 
+      shading:THREE.FlatShading
+    });
 
-        // parameters that specify the geometrical structure of the teddy bear
-        var params = {
-            noseRadius: 0.2,
-            noseRotation: TW.degrees2radians(1),
-            earRadius: 0.9,
-            earScale: 0.5,
-            earAngle: Math.PI ,
-            eyeRadius: 0.3,
-            eyeAngleX: -Math.PI / 6,
-            eyeAngleY: +Math.PI / 6,
-            armLength: 7,
-            armRadiusTop: .5, 
-            armRadiusBottom: .5, 
-            armRotationX: TW.degrees2radians(-60),
-            armRotationZ: TW.degrees2radians(45),
-            legRadiusTop: .6,
-            legRadiusBottom: .6,
-            legLength: 9,
-            legRotationX: -TW.degrees2radians(0), 
-            legRotationZ: TW.degrees2radians(0), 
-            hipWidth: 2.5,
-            hipHeight: -2,
-            headRadius: 3,
-            bodyRadius: 5,
-            bodyScaleY: 1.3,
-            hatHeight: 3,
-            hatBrimRad: 1.5,
-            brimThickness: .2,
-            smileSize: .5,
-            smileCompleteness: 2,
-            smileDetail: 50,
-            smileAngle: TW.degrees2radians(20),
-            smileGrin: .1,
-            shoulderRad: 1.7,
-            handRad: 1.3, 
-            footRad: 1.7,
-            hatRotationZ: TW.degrees2radians(-5),
-            hatRotationX: TW.degrees2radians(-5),
-            positionX: 0,
-            positionZ: 0,
-            rotation: 0
-        };
+    var handHeight = 20;
+    var bodyHeight = 70;
+    var armHeight = 50 ;
+    var faceHeight = 22;
+    var bodysegments = 4;
+    var bodyrotation = Math.PI/4
+    var bodyrotationx = Math.PI/8
 
-        var clown = new THREE.Object3D();
+    var torsoGeom = new THREE.CylinderGeometry(13, 20 ,bodyHeight,bodysegments);
+    var torso = new THREE.Mesh(torsoGeom,greyMat);
+    torso.rotateX(bodyrotationx);
+    torso.rotateY(bodyrotation);
 
-        // colors and materials for the teddy bear
-        var blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        var blueMaterial = new THREE.MeshBasicMaterial({ color: 0x0000FF });
-        var redMaterial = new THREE.MeshBasicMaterial({ color: 0xFF0000 });
-        var greyMaterial = new THREE.MeshBasicMaterial({ color: 0xffffcc });
-        var greenMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-        var softBlueMaterial = new THREE.MeshBasicMaterial({ color: 0x00cccc });
-        var purpleMaterial = new THREE.MeshBasicMaterial({ color: "purple" });
-        var yellowMaterial = new THREE.MeshBasicMaterial({ color: "yellow" });
+    var torsoGeom2= new THREE.CylinderGeometry(12, 19 ,bodyHeight-2,bodysegments);
+    var torso2 = new THREE.Mesh(torsoGeom2,whiteMat);
+    torso2.rotateX(bodyrotationx);
+    torso2.rotateY(bodyrotation);
+    torso2.position.setZ(1.1);
 
-        function createHat(params) {
-            var hatGeometry = new THREE.CylinderGeometry(params.headRadius, params.headRadius, params.hatHeight, 10);
-            var hatMesh = new THREE.Mesh(hatGeometry, blackMaterial);
-            return hatMesh;
-        }
 
-        function createHatBrim(params) {
-            // create and return a Mesh for the nose
-            var brimGeometry = new THREE.CylinderGeometry(params.headRadius*params.hatBrimRad, params.headRadius*params.hatBrimRad, params.brimThickness, 10);
-            var brimMesh = new THREE.Mesh(brimGeometry, blackMaterial);
-            
-            return brimMesh;
-        }
+    var limb1 = new THREE.Object3D();
+    var limb2 = new THREE.Object3D();
+    var limb3 = new THREE.Object3D();
+    var limb4 = new THREE.Object3D();
 
-        function addHat(head, params) {
-            /* adds a nose to the head. It's placed by creating a composite object
-             * centered in the middle of the head, positioning the nose at the
-             * head radius on +Z, then rotating around the X axis by a little */
-            var FullHat = new THREE.Object3D();
-            var brim = createHatBrim(params);
-            var tophat = createHat(params);
-            tophat.position.y = params.hatHeight/2 + params.headRadius*.8;
-            brim.position.y =  params.headRadius*.8
-            FullHat.add(brim);
-            FullHat.add(tophat);
+    var armGeom = new THREE.CylinderGeometry(4, 6, armHeight,4);
+    var handGeom = new THREE.CylinderGeometry(5,7,armHeight/3,4);
+    var arm1 = new THREE.Mesh(armGeom, greyMat);
+    var arm2 = new THREE.Mesh(armGeom, greyMat);
+    var arm3 = new THREE.Mesh(armGeom, greyMat);
+    var arm4 = new THREE.Mesh(armGeom, greyMat);
+    var hand1 = new THREE.Mesh(handGeom, whiteMat);
+    var hand2 = new THREE.Mesh(handGeom, whiteMat);
+    var hand3 = new THREE.Mesh(handGeom, whiteMat);
+    var hand4 = new THREE.Mesh(handGeom, whiteMat);
 
-            FullHat.rotation.x = params.hatRotationX*0.0174533;
-            FullHat.rotation.z = params.hatRotationZ*0.0174533;
-            head.add(FullHat);
-            return head;
+    arm1.position.set(0,armHeight/2,0)
+    arm2.position.set(0,armHeight/2,0)
+    arm3.position.set(0,armHeight/2,0)
+    arm4.position.set(0,armHeight/2,0)
 
-        }
+    hand1.position.set(0,armHeight/2/3-1,0)
+    hand2.position.set(0,armHeight/2/3-1,0)
+    hand3.position.set(0,armHeight/2/3-1,0)
+    hand4.position.set(0,armHeight/2/3-1,0)
 
-        function createSmile(params) {
-            // create and return a Mesh for the nose
-            var smileGeometry = new THREE.TorusGeometry(params.smileSize, params.smileGrin, params.smileDetail, params.smileDetail, params.smileCompleteness);
-            var smileMesh = new THREE.Mesh(smileGeometry, redMaterial);
-            smileMesh.rotateZ(-params.smileCompleteness);
-            
-            return smileMesh;
-        }
 
-        function addSmile(head, params) {
-            /* adds a nose to the head. It's placed by creating a composite object
-             * centered in the middle of the head, positioning the nose at the
-             * head radius on +Z, then rotating around the X axis by a little */
-            var smileFrame = new THREE.Object3D();
-            var smiley = createSmile(params);
-            var radius = params.headRadius;
-            var angle = params.smileAngle;
-            smiley.position.z = radius; 
-            smileFrame.add(smiley);
-            smileFrame.rotation.x = angle;
-            head.add(smileFrame);
-            return head;
-        }
+    limb1.add(arm1);
+    limb1.add(hand1);
+    limb2.add(arm2);
+    limb2.add(hand2);
+    limb3.add(arm3);
+    limb3.add(hand3);
+    limb4.add(arm4);
+    limb4.add(hand4);
 
-        function createNose(params) {
-            // create and return a Mesh for the nose
-            var radius = params.noseRadius;
-            var noseGeometry = new THREE.SphereGeometry(radius, 10, 10);
-            var noseMesh = new THREE.Mesh(noseGeometry, redMaterial);
-            return noseMesh;
-        }
 
-        function addNose(head, params) {
-            /* adds a nose to the head. It's placed by creating a composite object
-             * centered in the middle of the head, positioning the nose at the
-             * head radius on +Z, then rotating around the X axis by a little */
-            var noseframe = new THREE.Object3D();
-            var nose = createNose(params);
-            var radius = params.headRadius;
-            nose.position.z = radius;   // within the noseframe
-            noseframe.add(nose);
-            var angle = params.noseRotation;
-            noseframe.rotation.x = angle;
-            head.add(noseframe);
-            return head;
-        }
+    torso.add(limb1)
+    torso.add(limb2)
+    torso.add(limb3)
+    torso.add(limb4)
 
-        function createEar(params) {
-            // create and return a Mesh for an ear
-            var radius = params.earRadius;
-            var earGeometry = new THREE.SphereGeometry(radius, 10, 10);
-            var ear = new THREE.Mesh(earGeometry, redMaterial);
-            // flattens the sphere to make it look more like a flat disk
-            ear.scale.z = params.earScale;
-            return ear;
-        }
 
-        function addEar(head, params, side) {
-            /* adds an ear to the head on the right (side=1) or left (side=-1).
-             * The center of the ear is flush with the surface of the head by
-             * moving it out by the radius, and rotating it around the Z axis
-             * to get it to the desired height */
-            var earframe = new THREE.Object3D();
-            var ear = createEar(params);
-            var radius = params.headRadius;
-            var angle = params.earAngle;
-            ear.position.x = side * radius; // within the earframe
-            earframe.rotation.z = side * angle;
-            earframe.add(ear);
-            head.add(earframe);
-            return head;
-        }
+    limb1.position.set(6,-bodyHeight*Math.cos(bodyrotationx)/2,bodyHeight*Math.sin(bodyrotationx)*.75)
+    limb2.position.set(-6,-bodyHeight*Math.cos(bodyrotationx)/2,bodyHeight*Math.sin(bodyrotationx)*.75)
+    limb3.position.set(6,-bodyHeight*Math.cos(bodyrotationx)/2,armHeight-20)
+    limb4.position.set(-6,-bodyHeight*Math.cos(bodyrotationx)/2,armHeight-20)
 
-        function createEye(params) {
-            // create and return a Mesh for an eye
-            var radius = params.eyeRadius;
-            var eyeGeometry = new THREE.SphereGeometry(radius, 10, 10);
-            var eyeMesh = new THREE.Mesh(eyeGeometry, blackMaterial);
-            return eyeMesh;
-        }
+    limb3.rotateX(Math.PI/2)
+    limb4.rotateX(Math.PI/2)
 
-        function addEye(head, params, side) {
-            /* adds an eye to the head on the right (side=1) or left (side=-1).
-             * The center of the eye is flush with the surface of the head by
-             * moving it out along the Z axis by the radius, and rotating it
-             * around the X and then Y axes to get it to the desired height */
-            var eyeframe = new THREE.Object3D();
-            var eye = createEye(params);
-            var radius = params.headRadius;
-            eye.position.z = radius;     // within the eyeframe
-            var angleX = params.eyeAngleX;
-            var angleY = params.eyeAngleY;
-            eyeframe.rotation.x = angleX;
-            eyeframe.rotation.y = side * angleY;
-            eyeframe.add(eye);
-            head.add(eyeframe);
-            return head;
-        }
-
-        function createHead(params) {
-            /* creates and returns a teddy bear head object, with origin in the 
-             * center and eyes on the +Z side of the head, and ears on the left 
-             * (-X) and right (+X) sides */
-            var head = new THREE.Object3D();
-
-            var radius = params.headRadius;
-            var headGeometry = new THREE.SphereGeometry(radius, 10, 10);
-            var headMesh = new THREE.Mesh(headGeometry, greyMaterial);
-            head.add(headMesh);
-            addHat(head,params)
-            addNose(head, params);
-            addEar(head, params, 1);
-            addEar(head, params, -1);
-            addEye(head, params, 1);
-            addEye(head, params, -1);
-            addSmile(head, params);
-            return head;
-        }
-
-        function createArm(params) {
-            /* creates and returns an Object with the center at the shoulder 
-             * and the negative Y axis running down the center */
-            var arm = new THREE.Object3D();
-            var top = params.armRadiusTop;
-            var bot = params.armRadiusBottom;
-            var len = params.armLength;
-            var armGeom = new THREE.CylinderGeometry(top, bot, len, 10);
-            var shoulder = new THREE.SphereGeometry(params.shoulderRad, 10, 10);
-            var hand = new THREE.SphereGeometry(params.handRad, 10, 10);
-            var shoulderMesh = new THREE.Mesh(shoulder, blueMaterial);
-            var handMesh = new THREE.Mesh(hand, greenMaterial);
-            var armMesh = new THREE.Mesh(armGeom, softBlueMaterial);
-            armMesh.position.y = -len / 2;
-            shoulderMesh.position.y = -params.shoulderRad/1;
-            handMesh.position.y = -len
-            arm.add(armMesh);
-            arm.add(handMesh)
-            arm.add(shoulderMesh)
-            return arm;
-        }
-
-        function addArm(bear, params, side) {
-            /* adds an arm to the bear on the right (side=1) or left (side=-1) */
-            var arm = createArm(params);
-            var radius = params.bodyRadius;
-            var scale = params.bodyScaleY;
-            var sx = radius * 0.5;
-            var sy = scale * radius * 0.7;
-            arm.position.set(side * sx, sy, 0);
-            arm.rotation.z = side * params.armRotationZ;
-            arm.rotation.x = 1 * params.armRotationX;
-            bear.add(arm);
-        }
-
-        function createLeg(radiusTop, radiusBottom, length, params) {
-            /* creates and returns an Object with the center at the top and the 
-             * negative Y axis running down the center */
-            var limb = new THREE.Object3D();
-            var limbGeom = new THREE.CylinderGeometry(radiusTop, radiusBottom, length, 10);
-            var limbMesh = new THREE.Mesh(limbGeom, purpleMaterial);
-            var foot = new THREE.SphereGeometry(params.handRad, 10, 10, 0, Math.PI);
-            var footMesh = new THREE.Mesh(foot, greenMaterial);
-            limbMesh.position.y = -length / 2;
-            footMesh.rotateX(Math.PI/-2);
-            footMesh.position.y = -length-params.footRad/3;
-            limb.add(limbMesh);
-            limb.add(footMesh);
-            return limb;
-        }
-
-        function addLeg(bear, params, side) {
-            /* adds a leg to the bear on the right (side=1) or left (side=-1) */
-            var top = params.legRadiusTop;
-            var bot = params.legRadiusBottom;
-            var len = params.legLength;
-            var leg = createLeg(top, bot, len, params);
-            var radius = params.bodyRadius;
-            var scale = params.bodyScaleY;
-            var hx = side * params.hipWidth;
-            var hy = params.hipHeight;
-            leg.position.set(hx, hy, 0);
-            leg.rotation.x = params.legRotationX;
-            leg.rotation.z = side * params.legRotationZ;
-            bear.add(leg);
-        }
-
-        function createBody(params) {
-            // creates and returns a body Object for the bear
-            var body = new THREE.Object3D();
-            var radius = params.bodyRadius;
-            var bodyGeom = new THREE.SphereGeometry(radius*1, 10, 30);
-            var bodyMesh = new THREE.Mesh(bodyGeom, softBlueMaterial);
-            var scale = params.bodyScaleY;
-            bodyMesh.scale.y = scale;
-            body.add(bodyMesh);
-            addArm(body, params, 1);
-            addArm(body, params,-1);
-            addLeg(body, params, 1);
-            addLeg(body, params, -1);
-            return body;
-        }
-
-        function createClowny(params) {
-            // creates and returns a bear object
-            var clown = new THREE.Object3D();
-            var originGeo = new THREE.SphereGeometry(1, 10, 10);
-            var originMesh = new THREE.Mesh(originGeo, yellowMaterial);
-            var body = createBody(params);
-            clown.add(body);
-            clown.add(originMesh)
-            var head = createHead(params);
-            var bs = params.bodyScaleY;
-            var br = params.bodyRadius;
-            var hr = params.headRadius;
-            // calculate position for the center of the head
-            head.position.y = bs * br + hr;
-            clown.add(head);
-            return clown;
-        }
+    limb3.rotateZ(Math.PI)
+    limb4.rotateZ(Math.PI)
 
 
 
-        // construct a renderer for the scene
-        var renderer = new THREE.WebGLRenderer();
-
-        // create the Scene object
-        var scene = new THREE.Scene();
-
-        // create a teddy bear and add it to the scene
-        clown = createClowny(params);
-        scene.add(clown);
+    cat.add(limb1);
+    cat.add(limb2);
+    cat.add(limb3);
+    cat.add(limb4);
 
 
-        TW.mainInit(renderer, scene);
+    
 
-    function redraw() {
-         scene.remove(clown);
-         clown = createClowny(params)
-         clown.position.x = params.positionX;
-         clown.position.z = params.positionZ;
-         clown.rotateY(params.rotation);
-         scene.add(clown);
-         TW.render();
-      }
+    cat.add(torso);
+    cat.add(torso2);
 
-       var gui = new dat.GUI();
-       gui.add(params, 'positionX', -20, 20).onChange(redraw);
-       gui.add(params, 'positionZ', -20, 20).onChange(redraw);
-       gui.add(params, 'rotation', -Math.PI*2, Math.PI*2).onChange(redraw);
-       gui.add(params, 'hatRotationX', -20, 10).onChange(redraw);
-       gui.add(params, 'hatHeight', 2, 10).onChange(redraw);
-       gui.add(params, 'hatBrimRad', 1.5, 4).onChange(redraw);
 
-        TW.cameraSetup(renderer,
-            scene,
-            {
-                minx: -5, maxx: 5,
-                miny: -10, maxy: 15,
-                minz: -5, maxz: 5
-            });
 
-        TW.viewFromAboveFrontSide();
 
-    </script>
-    <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
+    var head = new THREE.Object3D();
+    head.position.set(0,bodyHeight*Math.cos(bodyrotationx)/1.5,bodyHeight*Math.sin(bodyrotationx))
+
+    var faceGeom = new THREE.BoxGeometry(27,faceHeight,30);
+    var face = new THREE.Mesh(faceGeom,blackMat);
+    head.add(face)
+
+    var muzzleGeom = new THREE.BoxGeometry(30*.4,faceHeight*.4/2,10);
+    var muzzletop = new THREE.Mesh(muzzleGeom, lightGreyMat);
+    muzzletop.position.set(0,-(faceHeight*.4)/2,15-3)
+    head.add(muzzletop);
+    var muzzlebot = new THREE.Mesh(muzzleGeom, whiteMat);
+    muzzlebot.position.set(0,-faceHeight/2+faceHeight*.4/2/2+.1,15-3)
+    head.add(muzzlebot);
+    var muzzleGeom2 = new THREE.BoxGeometry(30*.4/3,faceHeight*.4/2,10);
+    var muzzletop = new THREE.Mesh(muzzleGeom2, pinkMat);
+    muzzletop.position.set(0,-(faceHeight*.4)/2+.1,15-3+.1)
+    head.add(muzzletop);
+
+
+    var earGeom = new THREE.CylinderGeometry(0,6, 8, 3,1);
+
+    var leftEar = new THREE.Mesh(earGeom,greyMat)
+    var rightEar = new THREE.Mesh(earGeom,greyMat)
+    rightEar.rotateY(Math.PI)
+    leftEar.rotateY(Math.PI)
+
+    leftEar.position.set(7,faceHeight/2+4,5)
+    rightEar.position.set(-7,faceHeight/2+4,5)
+    head.add(rightEar)
+    head.add(leftEar)
+
+    var eyeGeom = new THREE.PlaneGeometry(8, 6);
+    var pupilgeo = new THREE.PlaneGeometry(4, 6);
+    var eyeMat = new THREE.MeshBasicMaterial({color: 0xffffff});
+    var pupilmat = new THREE.MeshBasicMaterial({color: 0x4444cc});
+
+      var eyeleft = new THREE.Mesh(eyeGeom, eyeMat);
+      eyeleft.position.set(-6, faceHeight/4, 15.1);
+
+      var pupilleft = new THREE.Mesh(pupilgeo, pupilmat);
+      pupilleft.position.set(-3, faceHeight/4, 15.2);
+
+      var eyeright = new THREE.Mesh(eyeGeom, eyeMat);
+      eyeright.position.set(6, faceHeight/4, 15.1);
+
+      var pupilright = new THREE.Mesh(pupilgeo, pupilmat);
+      pupilright.position.set(8, faceHeight/4, 15.2);
+
+
+      head.add(eyeleft);
+      head.add(pupilleft);
+      head.add(eyeright);
+      head.add(pupilright);
+
+
+
+    var truetail = new THREE.Object3D();
+      var tailGeo1 = new THREE.CylinderGeometry(3, 3, 20,20);
+      var tailGeo2 = new THREE.CylinderGeometry(3, 3, 60,20);
+      var tail1 = new THREE.Mesh(tailGeo1, whiteMat);
+      var tail2 = new THREE.Mesh(tailGeo2, blackMat);
+
+      //tail1.position.set(0,-bodyHeight*Math.cos(bodyrotationx)/2+10,-0-bodyHeight*Math.sin(bodyrotationx))
+      tail2.position.set(0,30,-15)
+
+      tail1.rotateX(Math.PI/2)
+    tail2.rotateX(-Math.PI/16)
+
+    //   tail1.rotateY(bodyrotation)
+    //   tail2.rotateY(bodyrotation)
+
+      truetail.add(tail1);
+      truetail.add(tail2);
+      truetail.position.set(0,-bodyHeight*Math.cos(bodyrotationx)/2+10,-0-bodyHeight*Math.sin(bodyrotationx))
+      //truetail.rotate)
+      cat.add(truetail);
+
+
+
+
+
+
+cat.add(head)
+
+
+
+
+    return cat;
+    }
+
+
+
+    function setupCamera(cameraParameters) {
+      // set up an abbreviation 
+      var cp = cameraParameters;
+      // create an initial camera with the desired shape
+      var camera = new THREE.PerspectiveCamera(cp.fov, cp.aspectRatio, cp.near, cp.far);
+      // set the camera location and orientation
+      camera.position.set(cp.eyeX, cp.eyeY, cp.eyeZ);
+      camera.up.set(cp.upX, cp.upY, cp.upZ);
+      camera.lookAt(new THREE.Vector3(cp.atX, cp.atY, cp.atZ));
+      return camera;
+    }
+
+    function render() {
+      // a render function; assume global variables scene, renderer, and camera
+      renderer.render(scene, camera);
+    }
+
+    function setupCameraControls() {
+      var cameraControls = new THREE.OrbitControls(camera, canvas);
+      state.cameraControls = cameraControls;
+      cameraControls.addEventListener('change', render);
+      cameraControls.update();
+    }
+
+    var state = {};
+    var ah = new THREE.AxesHelper(50);
+    var viewnumber = 0;
+    var cameraParams = {
+      near: 1,
+      far: 250,
+      fov: 75,                // degrees
+      aspectRatio: 700 / 500,   // from dimensions of the canvas, see CSS
+      atX: 0,
+      atY: 0,
+      atZ: 0,
+      eyeX: 00,
+      eyeY: 0,
+      eyeZ: 150,
+      upX: 0,
+      upY: 1,
+      upZ: 0
+    };
+
+    var scene = new THREE.Scene();
+
+    var renderer = new THREE.WebGLRenderer();
+     var canvas = renderer.domElement;
+  state.renderer = renderer;  // save this so that others can use it.
+    state.scene = scene;        // save this so that others can use it.
+    var parent = document.body;
+    parent.appendChild(canvas);
+    renderer.setSize(750, 500);
+    renderer.setClearColor(new THREE.Color(0xcccccc), 1); //darker greyish... it's evening!
+
+    //7. Set up a camera for the scene
+    var camera = setupCamera(cameraParams);
+    scene.add(camera);
+
+    var cat = caty();
+    scene.add(cat)
+
+      var ambLight = new THREE.AmbientLight(0xffffff, 1);scene.add(ambLight);
+
+    //set up camera controls so we can use mouse to pan around scene
+    render();
+
+    setupCameraControls();
+
+</script>
+<script id="allhatscode"></script>
+<!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
 
 </body>
 

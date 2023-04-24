@@ -80,11 +80,12 @@
             return baseMesh;
         }
 
+        var baseGeometry
         function createPompom(texture){
             // create and return a Mesh for the hat
             var height = params.hatHeight;
             var radius = params.hatRadius;
-            var baseGeometry = new THREE.SphereGeometry(1, 32, 16, 0, 6.29,0, 3.14);
+             baseGeometry = new THREE.SphereGeometry(1, 32, 16, 0, 6.29,0, 3.14);
             var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
             var baseMesh = new THREE.Mesh(baseGeometry, silkMaterial);
             return baseMesh;
@@ -171,6 +172,7 @@
             function (texture) {
                 addHat(texture);
             } );
+        
 
     </script>
     <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
