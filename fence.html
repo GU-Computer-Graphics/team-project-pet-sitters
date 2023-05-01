@@ -23,6 +23,55 @@
 
 <body>
     <script id="Fence">
+        //create the Scene object
+        var scene = new THREE.Scene();
+        function render() {
+            // a render function; assume global variables scene, renderer, and camera
+            renderer.render(scene);
+        }
+        var renderer = new THREE.WebGLRenderer();
+
+        var tl = new THREE.TextureLoader();
+        //outside
+        let outsideTexture = tl.load("sky.jpg", render);
+        outsideTexture.wrapS = THREE.RepeatWrapping;
+        outsideTexture.wrapT = THREE.RepeatWrapping;
+        outsideTexture.needsUpdate = true;
+        // worldTexture.repeat.set(50, 50);
+
+        var outsideMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(500, 500, 500),
+            new THREE.MeshBasicMaterial({ //basic so we don't get light interactions from car
+                color: new THREE.Color("grey"),
+                flatShading: THREE.FlatShading,
+                side: THREE.BackSide,
+                map: outsideTexture  //TODO: can temporarily comment out to see without local server
+            }));
+
+        outsideMesh.translateY(250 - (5 + 0.02));
+        scene.add(outsideMesh);
+
+        // add a ground to the scene
+        let groundTexture = tl.load("grass.jpg", render);
+        groundTexture.wrapS = THREE.RepeatWrapping;
+        groundTexture.wrapT = THREE.RepeatWrapping;
+        groundTexture.needsUpdate = true;
+        groundTexture.repeat.set(5, 5);
+
+        var groundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(500, 500),
+            new THREE.MeshBasicMaterial({
+                color: new THREE.Color(0x76552b),
+                specular: new THREE.Color("white"),
+                shininess: 10,
+                flatShading: THREE.FlatShading,
+                side: THREE.DoubleSide,
+                map: groundTexture //TODO: can temporarily comment out to see without local server
+            }));
+
+        groundMesh.translateY(-5 + 0.02);
+        groundMesh.rotateX(THREE.Math.degToRad(90));
+        scene.add(groundMesh);
 
         var colorMaterials = [new THREE.MeshPhongMaterial({
                     color: new THREE.Color("black"),
@@ -37,29 +86,25 @@
                     shininess: 10,
                     flatShading: THREE.FlatShading,
                     side: THREE.DoubleSide
-                }),
-                new THREE.MeshPhongMaterial({
-                    color: new THREE.Color("green"),
-                    specular: new THREE.Color("white"),
-                    shininess: 10,
-                    flatShading: THREE.FlatShading,
-                    side: THREE.DoubleSide
                 })];
     
 
-        // create the Scene object
-        var scene = new THREE.Scene();
-
          //add light
         // add ambient light source
-        var ambLight = new THREE.AmbientLight(new THREE.Color("white"), 0.4);
+        var ambLight = new THREE.AmbientLight(new THREE.Color("white"), 1);
         scene.add(ambLight);
 
-        // add a rug to the scene
-        var rug = new THREE.Mesh(new THREE.PlaneGeometry(200, 140), colorMaterials[2]);
-        rug.position.set(100, 0, 70);
-        rug.rotation.set(-Math.PI / 2, 0, 0);
-        scene.add(rug);
+        function addDirLight()
+        {
+            directLight = new THREE.DirectionalLight(0xdddddd, 0.4);
+            directLight.position.set(-50,100,-50);           
+            directLight.target.position.set(0,0,0);   
+            scene.add(directLight);
+            scene.add(directLight.target);
+        }
+        addDirLight();
+        const axesHelper = new THREE.AxesHelper( 500 );
+        scene.add( axesHelper );    
 
         var fence = new THREE.Mesh(new THREE.PlaneGeometry(200, 40), colorMaterials[1]);
         fence.position.set(100, 15, 10);
