@@ -17,6 +17,7 @@
   <script src="./js/three.js"></script>
   <script src="./js/OrbitControls.js"></script>
   <script src="./js/SceneUtils.js"></script>
+  <script src="./js/dat.gui.js"></script>
 
 </head>
 
@@ -30,6 +31,9 @@
     var tailmod = 0;
     var bodyrotationx = Math.PI / 8
     var sitting = true; 
+    var catCustoms = {
+      pupilColor: 0x4444cc
+    }
     var pinkMat = new THREE.MeshLambertMaterial({
         color: 0xe0877e,//0xe0a79f, 
         shading: THREE.FlatShading
@@ -213,7 +217,7 @@
       var eyeGeom = new THREE.PlaneGeometry(8, 6);
       var pupilgeo = new THREE.PlaneGeometry(4, 6);
       var eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-      var pupilmat = new THREE.MeshBasicMaterial({ color: 0x4444cc });
+      var pupilmat = new THREE.MeshBasicMaterial({ color: catCustoms.pupilColor});
 
       var eyeleft = new THREE.Mesh(eyeGeom, eyeMat);
       eyeleft.position.set(-6, faceHeight / 4, 15.1);
@@ -438,7 +442,9 @@
         }
 
          addHat();
-               //eventListener for interactive hat
+    
+         // add beanie
+
       
     document.addEventListener('click', onClick, false);
 
@@ -539,6 +545,35 @@
       }
       setupCameraControls(); //probably a better way to fix this...
     });
+
+        // load correct barn to scene
+      function redoScene(){
+        scene.remove(cat);
+
+        if(guiParams.eyeColor == "blueEyes"){
+          catCustoms.pupilColor = 0x4444cc;
+          cat = caty();
+          scene.add(cat);
+        }
+        if(guiParams.eyeColor == "greenEyes"){
+          catCustoms.pupilColor = 0x00cc00;
+          cat = caty();
+          scene.add(cat);
+        }
+        if(guiParams.eyeColor == "purpleEyes"){
+          catCustoms.pupilColor = 0x8332a8;
+          cat = caty();
+          scene.add(cat);
+        }
+    }
+    // setup GUI
+    var guiParams = {
+      eyeColor: "blueEyes",
+      // groundTexture: "grass"
+    }
+
+    var gui = new dat.GUI;
+    gui.add(guiParams, "eyeColor", ["blueEyes", "greenEyes", "purpleEyes"]).onChange(redoScene).name("Eye Color");
 
   // add keypress code 
   </script>
