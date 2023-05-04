@@ -328,7 +328,7 @@
 
     var scene = new THREE.Scene();
 
-    var renderer = new THREE.WebGLRenderer();
+    var renderer = new THREE.WebGLRenderer({antialias: true} );
     var canvas = renderer.domElement;
     state.renderer = renderer;  // save this so that others can use it.
     state.scene = scene;        // save this so that others can use it.
