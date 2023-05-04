@@ -1,4 +1,257 @@
+
 <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>The Fence</title>
+    <style>
+        canvas {
+            display: block;
+            margin: 10px auto;
+            width: 80%;
+            height: 600px;
+        }
+    </style>
+
+    <script src="./js/three.js"></script>
+    <script src="./js/tw.js"></script>
+    <script src="./js/OrbitControls.js"></script>
+    <script src="./js/SceneUtils.js"></script>
+
+</head>
+
+<body>
+    <script id="Fence">
+        //create the Scene object
+        var scene = new THREE.Scene();
+        var renderer = new THREE.WebGLRenderer( {antialias: true} );
+        renderer.setClearColor(new THREE.Color(0x000000)); 
+        renderer.setSize(window.innerWidth, window.innerHeight); 
+        renderer.shadowMap.Enabled = true; 
+
+        var tl = new THREE.TextureLoader();
+        //outside
+        let outsideTexture = tl.load("sky.jpg", render);
+        outsideTexture.wrapS = THREE.RepeatWrapping;
+        outsideTexture.wrapT = THREE.RepeatWrapping;
+        outsideTexture.needsUpdate = true;
+    
+
+        var outsideMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(1000, 1000, 1000),
+            new THREE.MeshBasicMaterial({ 
+                color: new THREE.Color("grey"),
+                flatShading: THREE.FlatShading,
+                side: THREE.BackSide,
+                map: outsideTexture  
+            }));
+            //outsideMesh.castShadow=true;
+        outsideMesh.translateY(250 - (5 + 0.02));
+        outsideMesh.position.set(100,455,0);
+        scene.add(outsideMesh);
+
+        // add a ground to the scene
+        let groundTexture = tl.load("grass.jpg", render);
+        groundTexture.wrapS = THREE.RepeatWrapping;
+        groundTexture.wrapT = THREE.RepeatWrapping;
+        groundTexture.needsUpdate = true;
+        groundTexture.repeat.set(5,5);
+
+        var groundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(1500, 1500),
+            new THREE.MeshPhongMaterial({
+                color: new THREE.Color(0x76552b),
+                specular: new THREE.Color("white"),
+                shininess: 0,
+                //flatShading: THREE.FlatShading,
+                side: THREE.DoubleSide,
+                map: groundTexture 
+            }));
+
+        groundMesh.translateY(-5 + 0.02);
+        groundMesh.rotateX(THREE.Math.degToRad(90));
+        groundMesh.receiveShadow = true;
+        scene.add(groundMesh);
+
+        function render() {
+            renderer.render(scene);
+        }
+
+        // add ambient light source
+        var ambLight = new THREE.AmbientLight(new THREE.Color("white"), 0.2);
+        //scene.add(ambLight);    
+
+        var material = new THREE.MeshPhongMaterial( {color: new THREE.Color("white")} ); 
+
+        var fencePick = new THREE.Object3D();
+        var fencePick3 = new THREE.Object3D();
+        function makePicket()
+        {
+            var geometry = new THREE.BoxGeometry( 6, 40, 6 ); 
+            var cube = new THREE.Mesh( geometry, material ); 
+            cube.position.set(0,15,0);
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            var baseWidth = 17;
+            var depth = 40;
+            var height = 10;
+            var prismGeometry = new THREE.CylinderGeometry(baseWidth / 2, baseWidth / 2, height, 3);
+            var fencetop = new THREE.Mesh(prismGeometry, material);
+            fencetop.receiveShadow = true;
+            fencetop.position.set(0,35,0);
+            fencetop.castShadow = true;
+            fencetop.rotation.y = Math.PI;
+            fencetop.rotation.x = Math.PI/2;
+            fencePick.add(cube);
+            fencePick.add(fencetop);
+        }
+        makePicket();
+
+        var numPickets = 16;
+        //back part of fence
+        var fence = new THREE.Object3D();
+        for (var i = 0; i < numPickets; i++)
+        {
+            fencePick = fencePick.clone();
+            fencePick.castShadow=true;
+            fencePick.translateX(20);
+            fencePick.castShadow = true;
+            fence.add(fencePick);
+        }
+        scene.add(fence);
+
+        var numPickets2 = 8;
+        var fence2 = new THREE.Object3D();
+        for (var i = 0; i < numPickets2; i++)
+        {
+            fencePick = fencePick.clone();
+            fencePick.castShadow=true;
+            fencePick.translateZ(20);
+            fencePick.castShadow = true;
+            fence2.add(fencePick);
+        }
+        scene.add(fence2);
+
+        var numPickets3 = 8;
+        var fence3 = new THREE.Object3D();
+        for (var i = 0; i < numPickets3; i++)
+        {
+            fencePick = fencePick.clone();
+            fencePick.castShadow=true;
+            fencePick.translateZ(20);
+            fencePick.castShadow = true;
+            fence3.add(fencePick);
+        }
+        fence3.position.set(-300,0,-160);
+        scene.add(fence3);
+
+        var geomf = new THREE.BoxGeometry( 336, 6, 6 ); 
+        var bar = new THREE.Mesh( geomf, material ); 
+        bar.castShadow=true;
+        bar.position.set(170,15,0);
+        scene.add(bar);
+        var geomf2 = new THREE.BoxGeometry(6, 200, 6 ); 
+        var bar2 = new THREE.Mesh( geomf2, material ); 
+        bar2.castShadow=true;
+        bar2.position.set(20,15,80);
+        bar2.rotation.x = Math.PI/2;
+        scene.add(bar2);
+        var geomf3 = new THREE.BoxGeometry(6, 200, 6 ); 
+        var bar3 = new THREE.Mesh( geomf3, material ); 
+        bar3.castShadow=true;
+        bar3.position.set(320,15,80);
+        bar3.rotation.x = Math.PI/2;
+        scene.add(bar3);
+
+        const sun = new THREE.Mesh( new THREE.SphereGeometry( 75, 32, 16 ), 
+                                new THREE.MeshBasicMaterial({color: 0xffff00, transparent:true, opacity:0.9})); 
+        //sun.castShadow = true; 
+        //sun.receiveShadow = false;   
+        sun.position.set(-300, 800, -235);
+        scene.add( sun );
+
+        var light = new THREE.SpotLight();
+        light.position.set(-400, 800, -235);
+        light.target.position.set(-200, 0, -100);
+        light.castShadow = true;
+        
+        light.shadow.mapSize.width = 3048;
+        light.shadow.mapSize.height = 3048;
+        light.shadow.camera.near = 1; 
+        light.shadow.camera.far = 900; 
+        scene.add(light);
+        scene.add(light.target);
+        var cloud_group = new THREE.Object3D();
+        function cloudGroup()
+        {
+            var cloud1 = new THREE.Mesh( new THREE.SphereGeometry( 70, 32, 16 ), 
+                                new THREE.MeshBasicMaterial({color: 0xffffff, transparent:true, opacity:0.9})); 
+            //cloud1.castShadow = true; 
+            //cloud1.receiveShadow = false;   
+            cloud1.position.set(-250, 700, -235);
+            cloud_group.add( cloud1 );
+            var cloud2 = cloud1.clone();
+            //cloud2.castShadow = true; 
+            //cloud2.receiveShadow = false;   
+            cloud2.position.set(-290, 650, -235);
+            cloud_group.add( cloud2 );
+            var edgeCloud2 = cloud2.clone()
+            edgeCloud2.position.set(-350, 650, -235);
+            cloud_group.add(edgeCloud2);
+            var cloud3 = cloud1.clone();
+            //cloud3.castShadow = true; 
+            //cloud3.receiveShadow = false;   
+            cloud3.position.set(-210, 650, -235);
+            var edgeCloud = cloud3.clone()
+            edgeCloud.position.set(-160, 650, -235);
+            cloud_group.add(edgeCloud);
+            cloud_group.add( cloud3 );
+        }
+        cloudGroup();
+        scene.add(cloud_group);
+        var cloudG2 = cloud_group.clone();
+        cloudG2.translateX(400);
+        cloudG2.translateY(200);
+        scene.add(cloudG2);
+
+        var cloudG3 = cloud_group.clone();
+        cloudG3.translateX(700);
+        scene.add(cloudG3);
+        
+
+        // ====================================================================
+
+        var renderer = new THREE.WebGLRenderer();
+
+        TW.mainInit(renderer, scene);
+
+        TW.cameraSetup(renderer,
+            scene,
+            {
+                minx: 0, maxx: 400,
+                miny: 0, maxy: 380,
+                minz: 0, maxz: 240
+            });
+
+        render()
+            
+
+        TW.viewFromAboveFrontSide();
+        render();
+
+
+
+    </script>
+    <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
+
+</body>
+
+</html>
+
+
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -279,4 +532,4 @@
 
 </body>
 
-</html>
+</html> -->

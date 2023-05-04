@@ -312,7 +312,7 @@
     var viewnumber = 0;
     var cameraParams = {
       near: 1,
-      far: 250,
+      far: 2500,
       fov: 75,                // degrees
       aspectRatio: 700 / 500,   // from dimensions of the canvas, see CSS
       atX: 0,
@@ -329,6 +329,7 @@
     var scene = new THREE.Scene();
 
     var renderer = new THREE.WebGLRenderer({antialias: true} );
+    renderer.shadowMap.Enabled=true;
     var canvas = renderer.domElement;
     state.renderer = renderer;  // save this so that others can use it.
     state.scene = scene;        // save this so that others can use it.
@@ -438,9 +439,9 @@
             hatframe.add(bottomHat);
             hatframe.add(design)
             // position of hat on the side
-            hat.position.set(90,-40,0)
-            bottomHat.position.set(90,-48,0)
-            design.position.set(90,-44,0)
+            hat.position.set(90,-bodyHeight,0)
+            bottomHat.position.set(90,-8-bodyHeight,0)
+            design.position.set(90,-4-bodyHeight,0)
             hat.rotation.y = params.hatRotation;
             bottomHat.rotation.y = params.hatRotation;
             scene.add(hatframe);
@@ -485,9 +486,9 @@
           console.log("... on hat")
         }
         else {
-          hat.position.set(90, -40, 0)
-          bottomHat.position.set(90, -48, 0)
-          design.position.set(90, -44, 0)
+          hat.position.set(90, -0-bodyHeight, 0)
+          bottomHat.position.set(90, -8-bodyHeight, 0)
+          design.position.set(90, -4-bodyHeight, 0)
           params.onCat = true;
           console.log("... not on hat")
         }
@@ -596,6 +597,208 @@
     var gui = new dat.GUI;
     gui.add(guiParams, "eyeColor", ["blueEyes", "greenEyes", "purpleEyes"]).onChange(redoScene).name("Eye Color");
     gui.add(guiParams, "collarColor", ["redCollar", "pinkCollar", "yellowCollar"]).onChange(redoScene).name("Collar Color");
+
+
+
+    var tl = new THREE.TextureLoader();
+        //outside
+        let outsideTexture = tl.load("sky.jpg", render);
+        outsideTexture.wrapS = THREE.RepeatWrapping;
+        outsideTexture.wrapT = THREE.RepeatWrapping;
+        outsideTexture.needsUpdate = true;
+    
+
+        var outsideMesh = new THREE.Mesh(
+            new THREE.BoxGeometry(1000, 1000, 1000),
+            new THREE.MeshBasicMaterial({ 
+                color: new THREE.Color("grey"),
+                flatShading: THREE.FlatShading,
+                side: THREE.BackSide,
+                map: outsideTexture  
+            }));
+            //outsideMesh.castShadow=true;
+        //outsideMesh.translateY(250 - (5 + 0.02));
+        outsideMesh.position.set(0,500-bodyHeight-8,0);
+        scene.add(outsideMesh);
+
+        // add a ground to the scene
+        let groundTexture = tl.load("grass.jpg", render);
+        groundTexture.wrapS = THREE.RepeatWrapping;
+        groundTexture.wrapT = THREE.RepeatWrapping;
+        groundTexture.needsUpdate = true;
+        groundTexture.repeat.set(5,5);
+
+        var groundMesh = new THREE.Mesh(
+            new THREE.PlaneGeometry(1500, 1500),
+            new THREE.MeshPhongMaterial({
+                color: new THREE.Color(0x76552b),
+                specular: new THREE.Color("white"),
+                shininess: 0,
+                //flatShading: THREE.FlatShading,
+                side: THREE.DoubleSide,
+                map: groundTexture 
+            }));
+
+        groundMesh.position.set(0,-bodyHeight-7,0);
+        groundMesh.rotateX(THREE.Math.degToRad(90));
+        groundMesh.receiveShadow = true;
+        scene.add(groundMesh);
+
+        
+
+        // add ambient light source
+        var ambLight = new THREE.AmbientLight(new THREE.Color("white"), 0.2);
+        //scene.add(ambLight);    
+
+        var material = new THREE.MeshPhongMaterial( {color: new THREE.Color("white")} ); 
+
+        var fencePick = new THREE.Object3D();
+        var fencePick3 = new THREE.Object3D();
+        function makePicket()
+        {
+            var geometry = new THREE.BoxGeometry( 6, 40, 6 ); 
+            var cube = new THREE.Mesh( geometry, material ); 
+            cube.position.set(0,15,0);
+            cube.castShadow = true;
+            cube.receiveShadow = true;
+            var baseWidth = 17;
+            var depth = 40;
+            var height = 10;
+            var prismGeometry = new THREE.CylinderGeometry(baseWidth / 2, baseWidth / 2, height, 3);
+            var fencetop = new THREE.Mesh(prismGeometry, material);
+            fencetop.receiveShadow = true;
+            fencetop.position.set(0,35,0);
+            fencetop.castShadow = true;
+            fencetop.rotation.y = Math.PI;
+            fencetop.rotation.x = Math.PI/2;
+            fencePick.add(cube);
+            fencePick.add(fencetop);
+        }
+        makePicket();
+
+        var numPickets = 16;
+        //back part of fence
+        var fence = new THREE.Object3D();
+        for (var i = 0; i < numPickets; i++)
+        {
+            fencePick = fencePick.clone();
+            fencePick.castShadow=true;
+            fencePick.translateX(20);
+            fencePick.castShadow = true;
+            fence.add(fencePick);
+        }
+        scene.add(fence);
+        fence.position.set(-175,0,-200)
+        fence.translateY(-bodyHeight-7)
+        
+
+        var numPickets2 = 8;
+        var fence2 = new THREE.Object3D();
+        for (var i = 0; i < numPickets2; i++)
+        {
+            fencePick = fencePick.clone();
+            fencePick.castShadow=true;
+            fencePick.translateZ(20);
+            fencePick.castShadow = true;
+            fence2.add(fencePick);
+        }
+        scene.add(fence2);
+
+        fence2.translateY(-bodyHeight-7)
+
+        var numPickets3 = 8;
+        var fence3 = new THREE.Object3D();
+        for (var i = 0; i < numPickets3; i++)
+        {
+            fencePick = fencePick.clone();
+            fencePick.castShadow=true;
+            fencePick.translateZ(20);
+            fencePick.castShadow = true;
+            fence3.add(fencePick);
+        }
+        fence3.position.set(-490,-bodyHeight-7,-360);
+        fence2.position.set(-175,-bodyHeight-7,-200)
+
+        scene.add(fence3);
+
+        var geomf = new THREE.BoxGeometry( 336, 6, 6 ); 
+        var bar = new THREE.Mesh( geomf, material ); 
+        bar.castShadow=true;
+        bar.position.set(-0,15-bodyHeight-7,-200);
+        scene.add(bar);
+        var geomf2 = new THREE.BoxGeometry(6, 200, 6 ); 
+        var bar2 = new THREE.Mesh( geomf2, material ); 
+        bar2.castShadow=true;
+        bar2.position.set(-175,15-bodyHeight-7,-120);
+        bar2.rotation.x = Math.PI/2;
+        scene.add(bar2);
+        var geomf3 = new THREE.BoxGeometry(6, 200, 6 ); 
+        var bar3 = new THREE.Mesh( geomf3, material ); 
+        bar3.castShadow=true;
+        bar3.position.set(140,15-bodyHeight-7,-120);
+        bar3.rotation.x = Math.PI/2;
+        scene.add(bar3);
+
+        const sun = new THREE.Mesh( new THREE.SphereGeometry( 75, 32, 16 ), 
+                                new THREE.MeshBasicMaterial({color: 0xffff00, transparent:true, opacity:0.9})); 
+        //sun.castShadow = true; 
+        //sun.receiveShadow = false;   
+        sun.position.set(-300, 800, -235);
+        scene.add( sun );
+
+        var light = new THREE.SpotLight();
+        light.position.set(-400, 800, -235);
+        light.target.position.set(-200, 0, -100);
+        light.castShadow = true;
+        
+        light.shadow.mapSize.width = 3048;
+        light.shadow.mapSize.height = 3048;
+        light.shadow.camera.near = 1; 
+        light.shadow.camera.far = 900; 
+        scene.add(light);
+        scene.add(light.target);
+        var cloud_group = new THREE.Object3D();
+        function cloudGroup()
+        {
+            var cloud1 = new THREE.Mesh( new THREE.SphereGeometry( 70, 32, 16 ), 
+                                new THREE.MeshBasicMaterial({color: 0xffffff, transparent:true, opacity:0.9})); 
+            //cloud1.castShadow = true; 
+            //cloud1.receiveShadow = false;   
+            cloud1.position.set(-250, 700, -235);
+            cloud_group.add( cloud1 );
+            var cloud2 = cloud1.clone();
+            //cloud2.castShadow = true; 
+            //cloud2.receiveShadow = false;   
+            cloud2.position.set(-290, 650, -235);
+            cloud_group.add( cloud2 );
+            var edgeCloud2 = cloud2.clone()
+            edgeCloud2.position.set(-350, 650, -235);
+            cloud_group.add(edgeCloud2);
+            var cloud3 = cloud1.clone();
+            //cloud3.castShadow = true; 
+            //cloud3.receiveShadow = false;   
+            cloud3.position.set(-210, 650, -235);
+            var edgeCloud = cloud3.clone()
+            edgeCloud.position.set(-160, 650, -235);
+            cloud_group.add(edgeCloud);
+            cloud_group.add( cloud3 );
+        }
+        cloudGroup();
+        scene.add(cloud_group);
+        var cloudG2 = cloud_group.clone();
+        cloudG2.translateX(400);
+        cloudG2.translateY(200);
+        scene.add(cloudG2);
+
+        var cloudG3 = cloud_group.clone();
+        cloudG3.translateX(700);
+        scene.add(cloudG3);
+        
+
+        // ====================================================================
+
+
+        render();
 
   // add keypress code 
   </script>
