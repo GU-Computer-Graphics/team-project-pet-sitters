@@ -2,225 +2,228 @@
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <title>Final Project</title>
-    <style>
-        canvas {
-            display: block;
-            margin: 10px auto;
-            width: 80%;
-            height: 600px;
-        }
-    </style>
+  <title>Final Project</title>
+  <style>
+    canvas {
+      display: block;
+      margin: 10px auto;
+      width: 80%;
+      height: 600px;
+    }
+  </style>
 
-    <script src="./js/three.js"></script>
-    <script src="./js/OrbitControls.js"></script>
-    <script src="./js/SceneUtils.js"></script>
+  <script src="./js/three.js"></script>
+  <script src="./js/OrbitControls.js"></script>
+  <script src="./js/SceneUtils.js"></script>
 
 </head>
 
 <body>
-    <center><h1>Cat</h1></center>
-    <script>
-      var faceHeight = 22;
-      var tailRotation = Math.PI/4;
-      var tailmod = 0;
-    function caty()
-    {
-      var cat=new THREE.Object3D();
+  <center>
+    <h1>Cat</h1>
+  </center>
+  <script>
+    var faceHeight = 22;
+    var tailRotation = Math.PI / 4;
+    var tailmod = 0;
+    var bodyrotationx = Math.PI / 8
+    var sitting = true; 
+    function caty() {
+      var cat = new THREE.Object3D();
 
-      var yellowMat = new THREE.MeshLambertMaterial ({
-      color: 0xfdd276, 
-      shading:THREE.FlatShading
-    });
-  
-    var pinkMat = new THREE.MeshLambertMaterial ({
-      color: 0xe0877e,//0xe0a79f, 
-      shading:THREE.FlatShading
-    });
-  
-    var redMat = new THREE.MeshLambertMaterial ({
-      color: 0x630d15, 
-      shading:THREE.FlatShading
-    });
-  
-    var whiteMat = new THREE.MeshLambertMaterial ({
-      color: 0xffffff, 
-      shading:THREE.FlatShading
-    });
-  
-    var blackMat = new THREE.MeshLambertMaterial ({
-      color: 0x000000, 
-      shading:THREE.FlatShading
-    });
-    var greyMat = new THREE.MeshLambertMaterial ({
-      color: 0x111111, 
-      shading:THREE.FlatShading
-    });
-    var lightGreyMat = new THREE.MeshLambertMaterial ({
-      color: 0x333333, 
-      shading:THREE.FlatShading
-    });
-    var brownMat = new THREE.MeshLambertMaterial ({
-      color: 0x2e2019,//0x4b342a, 
-      shading:THREE.FlatShading
-    });
-  
-    var lightBrownMat = new THREE.MeshLambertMaterial ({
-      color: 0x664f4a, 
-      shading:THREE.FlatShading
-    });
+      var yellowMat = new THREE.MeshLambertMaterial({
+        color: 0xfdd276,
+        shading: THREE.FlatShading
+      });
 
-    var handHeight = 20;
-    var bodyHeight = 70;
-    var armHeight = 50 ;
-    
-    var bodysegments = 4;
-    var bodyrotation = Math.PI/4
-    var bodyrotationx = Math.PI/8
-    
+      var pinkMat = new THREE.MeshLambertMaterial({
+        color: 0xe0877e,//0xe0a79f, 
+        shading: THREE.FlatShading
+      });
 
-    var torsoGeom = new THREE.CylinderGeometry(13, 20 ,bodyHeight,bodysegments);
-    var torso = new THREE.Mesh(torsoGeom,greyMat);
-    torso.position.set(0,-(bodyHeight+faceHeight)/2*Math.cos(bodyrotationx),-(bodyHeight+faceHeight)/2*Math.sin(bodyrotationx))
-    torso.rotateX(bodyrotationx);
-    torso.rotateY(bodyrotation);
+      var redMat = new THREE.MeshLambertMaterial({
+        color: 0x630d15,
+        shading: THREE.FlatShading
+      });
 
-    var torsoGeom2= new THREE.CylinderGeometry(12, 19 ,bodyHeight-2,bodysegments);
-    var torso2 = new THREE.Mesh(torsoGeom2,whiteMat);
-    torso2.rotateX(bodyrotationx);
-    torso2.rotateY(bodyrotation);
-    torso2.position.set(0,-(bodyHeight+faceHeight)/2*Math.cos(bodyrotationx)-1*Math.sin(bodyrotationx),-(faceHeight+bodyHeight)/2*Math.sin(bodyrotationx)+1*Math.cos(bodyrotationx))
+      var whiteMat = new THREE.MeshLambertMaterial({
+        color: 0xffffff,
+        shading: THREE.FlatShading
+      });
+
+      var blackMat = new THREE.MeshLambertMaterial({
+        color: 0x000000,
+        shading: THREE.FlatShading
+      });
+      var greyMat = new THREE.MeshLambertMaterial({
+        color: 0x111111,
+        shading: THREE.FlatShading
+      });
+      var lightGreyMat = new THREE.MeshLambertMaterial({
+        color: 0x333333,
+        shading: THREE.FlatShading
+      });
+      var brownMat = new THREE.MeshLambertMaterial({
+        color: 0x2e2019,//0x4b342a, 
+        shading: THREE.FlatShading
+      });
+
+      var lightBrownMat = new THREE.MeshLambertMaterial({
+        color: 0x664f4a,
+        shading: THREE.FlatShading
+      });
+
+      var handHeight = 20;
+      var bodyHeight = 70;
+      var armHeight = 50;
+
+      var bodysegments = 4;
+      var bodyrotation = Math.PI / 4
+      
 
 
-    var limb1 = new THREE.Object3D();
-    var limb2 = new THREE.Object3D();
-    var limb3 = new THREE.Object3D();
-    var limb4 = new THREE.Object3D();
+      var torsoGeom = new THREE.CylinderGeometry(13, 20, bodyHeight, bodysegments);
+      var torso = new THREE.Mesh(torsoGeom, greyMat);
+      torso.position.set(0, -(bodyHeight + faceHeight) / 2 * Math.cos(bodyrotationx), -(bodyHeight + faceHeight) / 2 * Math.sin(bodyrotationx))
+      torso.rotateX(bodyrotationx);
+      torso.rotateY(bodyrotation);
 
-    var armGeom = new THREE.CylinderGeometry(4, 6, armHeight,4);
-    var handGeom = new THREE.CylinderGeometry(5,7,armHeight/3,4);
-    var arm1 = new THREE.Mesh(armGeom, greyMat);
-    var arm2 = new THREE.Mesh(armGeom, greyMat);
-    var arm3 = new THREE.Mesh(armGeom, greyMat);
-    var arm4 = new THREE.Mesh(armGeom, greyMat);
-    var hand1 = new THREE.Mesh(handGeom, whiteMat);
-    var hand2 = new THREE.Mesh(handGeom, whiteMat);
-    var hand3 = new THREE.Mesh(handGeom, whiteMat);
-    var hand4 = new THREE.Mesh(handGeom, whiteMat);
-
-    arm1.position.set(0,-armHeight/2,0)
-    arm2.position.set(0,-armHeight/2,0)
-    arm3.position.set(0,-armHeight/2,0)
-    arm4.position.set(0,-armHeight/2,0)
-
-    hand1.position.set(0,-armHeight+8,0)
-    hand2.position.set(0,-armHeight+8,0)
-    hand3.position.set(0,-armHeight+8,0)
-    hand4.position.set(0,-armHeight+8,0)
+      var torsoGeom2 = new THREE.CylinderGeometry(12, 19, bodyHeight - 2, bodysegments);
+      var torso2 = new THREE.Mesh(torsoGeom2, whiteMat);
+      torso2.rotateX(bodyrotationx);
+      torso2.rotateY(bodyrotation);
+      torso2.position.set(0, -(bodyHeight + faceHeight) / 2 * Math.cos(bodyrotationx) - 1 * Math.sin(bodyrotationx), -(faceHeight + bodyHeight) / 2 * Math.sin(bodyrotationx) + 1 * Math.cos(bodyrotationx))
 
 
-    limb1.add(arm1);
-    limb1.add(hand1);
-    limb2.add(arm2);
-    limb2.add(hand2);
-    limb3.add(arm3);
-    limb3.add(hand3);
-    limb4.add(arm4);
-    limb4.add(hand4);
+      var limb1 = new THREE.Object3D();
+      var limb2 = new THREE.Object3D();
+      var limb3 = new THREE.Object3D();
+      var limb4 = new THREE.Object3D();
+
+      var armGeom = new THREE.CylinderGeometry(4, 6, armHeight, 4);
+      var handGeom = new THREE.CylinderGeometry(5, 7, armHeight / 3, 4);
+      var arm1 = new THREE.Mesh(armGeom, greyMat);
+      var arm2 = new THREE.Mesh(armGeom, greyMat);
+      var arm3 = new THREE.Mesh(armGeom, greyMat);
+      var arm4 = new THREE.Mesh(armGeom, greyMat);
+      var hand1 = new THREE.Mesh(handGeom, whiteMat);
+      var hand2 = new THREE.Mesh(handGeom, whiteMat);
+      var hand3 = new THREE.Mesh(handGeom, whiteMat);
+      var hand4 = new THREE.Mesh(handGeom, whiteMat);
+
+      arm1.position.set(0, -armHeight / 2, 0)
+      arm2.position.set(0, -armHeight / 2, 0)
+      arm3.position.set(0, -armHeight / 2, 0)
+      arm4.position.set(0, -armHeight / 2, 0)
+
+      hand1.position.set(0, -armHeight + 8, 0)
+      hand2.position.set(0, -armHeight + 8, 0)
+      hand3.position.set(0, -armHeight + 8, 0)
+      hand4.position.set(0, -armHeight + 8, 0)
 
 
-    torso.add(limb1)
-    torso.add(limb2)
-    torso.add(limb3)
-    torso.add(limb4)
+      limb1.add(arm1);
+      limb1.add(hand1);
+      limb2.add(arm2);
+      limb2.add(hand2);
+      limb3.add(arm3);
+      limb3.add(hand3);
+      limb4.add(arm4);
+      limb4.add(hand4);
 
 
-    limb1.position.set(6,-(bodyHeight/2+faceHeight)/2*Math.cos(bodyrotationx),-(bodyHeight/8+faceHeight)/2*Math.sin(bodyrotationx))//bodyHeight*Math.sin(bodyrotationx)*.75)
-    limb2.position.set(-6,-(bodyHeight/2+faceHeight)/2*Math.cos(bodyrotationx),-(bodyHeight/8+faceHeight)/2*Math.sin(bodyrotationx))//bodyHeight*Math.sin(bodyrotationx)*.75)
-    limb3.position.set(6,-(bodyHeight*1.8+faceHeight)/2*Math.cos(bodyrotationx),-(bodyHeight*1.8+faceHeight)/2*Math.sin(bodyrotationx))//bodyHeight*Math.sin(bodyrotationx)*.75)
-    limb4.position.set(-6,-(bodyHeight*1.8+faceHeight)/2*Math.cos(bodyrotationx),-(bodyHeight*1.8+faceHeight)/2*Math.sin(bodyrotationx))//bodyHeight*Math.sin(bodyrotationx)*.75)
-
-    // limb2.position.set(-6,-bodyHeight*Math.cos(bodyrotationx)-faceHeight/2*Math.cos(bodyrotationx),-bodyHeight*Math.sin(bodyrotationx)/6)//bodyHeight*Math.sin(bodyrotationx)*.75)
-    // limb3.position.set(6,-bodyHeight*Math.cos(bodyrotationx),-bodyHeight*Math.sin(bodyrotationx))//-(armHeight)*Math.sin(bodyrotationx))
-    // limb4.position.set(-6,-bodyHeight*Math.cos(bodyrotationx),-bodyHeight*Math.sin(bodyrotationx))//-(armHeight)*Math.sin(bodyrotationx))
-    
-    // limb1.rotateY(-bodyrotation)
-    // limb2.rotateY(-bodyrotation)
-    // limb3.rotateY(-bodyrotation)
-    // limb4.rotateY(-bodyrotation)
-
-    limb3.rotateX(Math.PI/2+bodyrotationx)
-    limb4.rotateX(Math.PI/2+bodyrotationx)
-
-    limb3.rotateZ(Math.PI)
-    limb4.rotateZ(Math.PI)
+      torso.add(limb1)
+      torso.add(limb2)
+      torso.add(limb3)
+      torso.add(limb4)
 
 
+      limb1.position.set(6, -(bodyHeight / 2 + faceHeight) / 2 * Math.cos(bodyrotationx), -(bodyHeight / 8 + faceHeight) / 2 * Math.sin(bodyrotationx))//bodyHeight*Math.sin(bodyrotationx)*.75)
+      limb2.position.set(-6, -(bodyHeight / 2 + faceHeight) / 2 * Math.cos(bodyrotationx), -(bodyHeight / 8 + faceHeight) / 2 * Math.sin(bodyrotationx))//bodyHeight*Math.sin(bodyrotationx)*.75)
+      limb3.position.set(6, -(bodyHeight * 1.8 + faceHeight) / 2 * Math.cos(bodyrotationx), -(bodyHeight * 1.8 + faceHeight) / 2 * Math.sin(bodyrotationx))//bodyHeight*Math.sin(bodyrotationx)*.75)
+      limb4.position.set(-6, -(bodyHeight * 1.8 + faceHeight) / 2 * Math.cos(bodyrotationx), -(bodyHeight * 1.8 + faceHeight) / 2 * Math.sin(bodyrotationx))//bodyHeight*Math.sin(bodyrotationx)*.75)
 
-    cat.add(limb1);
-    cat.add(limb2);
-    cat.add(limb3);
-    cat.add(limb4);
+      // limb2.position.set(-6,-bodyHeight*Math.cos(bodyrotationx)-faceHeight/2*Math.cos(bodyrotationx),-bodyHeight*Math.sin(bodyrotationx)/6)//bodyHeight*Math.sin(bodyrotationx)*.75)
+      // limb3.position.set(6,-bodyHeight*Math.cos(bodyrotationx),-bodyHeight*Math.sin(bodyrotationx))//-(armHeight)*Math.sin(bodyrotationx))
+      // limb4.position.set(-6,-bodyHeight*Math.cos(bodyrotationx),-bodyHeight*Math.sin(bodyrotationx))//-(armHeight)*Math.sin(bodyrotationx))
+
+      // limb1.rotateY(-bodyrotation)
+      // limb2.rotateY(-bodyrotation)
+      // limb3.rotateY(-bodyrotation)
+      // limb4.rotateY(-bodyrotation)
+
+      limb3.rotateX(Math.PI / 2 + bodyrotationx)
+      limb4.rotateX(Math.PI / 2 + bodyrotationx)
+
+      limb3.rotateZ(Math.PI)
+      limb4.rotateZ(Math.PI)
 
 
-    
 
-    cat.add(torso);
-    cat.add(torso2);
+      cat.add(limb1);
+      cat.add(limb2);
+      cat.add(limb3);
+      cat.add(limb4);
 
 
 
 
-    var head = new THREE.Object3D();
-    //head.position.set(0,bodyHeight*Math.cos(bodyrotationx)/1.5,bodyHeight*Math.sin(bodyrotationx))
-
-    var faceGeom = new THREE.BoxGeometry(27,faceHeight,30);
-    var face = new THREE.Mesh(faceGeom,greyMat);
-    head.add(face)
-
-    var muzzleGeom = new THREE.BoxGeometry(30*.4,faceHeight*.4/2,10);
-    var muzzletop = new THREE.Mesh(muzzleGeom, lightGreyMat);
-    muzzletop.position.set(0,-(faceHeight*.4)/2,15-3)
-    head.add(muzzletop);
-    var muzzlebot = new THREE.Mesh(muzzleGeom, whiteMat);
-    muzzlebot.position.set(0,-faceHeight/2+faceHeight*.4/2/2+.1,15-3)
-    head.add(muzzlebot);
-    var muzzleGeom2 = new THREE.BoxGeometry(30*.4/3,faceHeight*.4/2,10);
-    var muzzletop = new THREE.Mesh(muzzleGeom2, pinkMat);
-    muzzletop.position.set(0,-(faceHeight*.4)/2+.1,15-3+.1)
-    head.add(muzzletop);
+      cat.add(torso);
+      cat.add(torso2);
 
 
-    var earGeom = new THREE.CylinderGeometry(0,6, 8, 3,1);
 
-    var leftEar = new THREE.Mesh(earGeom,greyMat)
-    var rightEar = new THREE.Mesh(earGeom,greyMat)
-    rightEar.rotateY(Math.PI)
-    leftEar.rotateY(Math.PI)
 
-    leftEar.position.set(7,faceHeight/2+4,5)
-    rightEar.position.set(-7,faceHeight/2+4,5)
-    head.add(rightEar)
-    head.add(leftEar)
+      var head = new THREE.Object3D();
+      //head.position.set(0,bodyHeight*Math.cos(bodyrotationx)/1.5,bodyHeight*Math.sin(bodyrotationx))
 
-    var eyeGeom = new THREE.PlaneGeometry(8, 6);
-    var pupilgeo = new THREE.PlaneGeometry(4, 6);
-    var eyeMat = new THREE.MeshBasicMaterial({color: 0xffffff});
-    var pupilmat = new THREE.MeshBasicMaterial({color: 0x4444cc});
+      var faceGeom = new THREE.BoxGeometry(27, faceHeight, 30);
+      var face = new THREE.Mesh(faceGeom, greyMat);
+      head.add(face)
+
+      var muzzleGeom = new THREE.BoxGeometry(30 * .4, faceHeight * .4 / 2, 10);
+      var muzzletop = new THREE.Mesh(muzzleGeom, lightGreyMat);
+      muzzletop.position.set(0, -(faceHeight * .4) / 2, 15 - 3)
+      head.add(muzzletop);
+      var muzzlebot = new THREE.Mesh(muzzleGeom, whiteMat);
+      muzzlebot.position.set(0, -faceHeight / 2 + faceHeight * .4 / 2 / 2 + .1, 15 - 3)
+      head.add(muzzlebot);
+      var muzzleGeom2 = new THREE.BoxGeometry(30 * .4 / 3, faceHeight * .4 / 2, 10);
+      var muzzletop = new THREE.Mesh(muzzleGeom2, pinkMat);
+      muzzletop.position.set(0, -(faceHeight * .4) / 2 + .1, 15 - 3 + .1)
+      head.add(muzzletop);
+
+
+      var earGeom = new THREE.CylinderGeometry(0, 6, 8, 3, 1);
+
+      var leftEar = new THREE.Mesh(earGeom, greyMat)
+      var rightEar = new THREE.Mesh(earGeom, greyMat)
+      rightEar.rotateY(Math.PI)
+      leftEar.rotateY(Math.PI)
+
+      leftEar.position.set(7, faceHeight / 2 + 4, 5)
+      rightEar.position.set(-7, faceHeight / 2 + 4, 5)
+      head.add(rightEar)
+      head.add(leftEar)
+
+      var eyeGeom = new THREE.PlaneGeometry(8, 6);
+      var pupilgeo = new THREE.PlaneGeometry(4, 6);
+      var eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      var pupilmat = new THREE.MeshBasicMaterial({ color: 0x4444cc });
 
       var eyeleft = new THREE.Mesh(eyeGeom, eyeMat);
-      eyeleft.position.set(-6, faceHeight/4, 15.1);
+      eyeleft.position.set(-6, faceHeight / 4, 15.1);
 
       var pupilleft = new THREE.Mesh(pupilgeo, pupilmat);
-      pupilleft.position.set(-3, faceHeight/4, 15.2);
+      pupilleft.position.set(-3, faceHeight / 4, 15.2);
 
       var eyeright = new THREE.Mesh(eyeGeom, eyeMat);
-      eyeright.position.set(6, faceHeight/4, 15.1);
+      eyeright.position.set(6, faceHeight / 4, 15.1);
 
       var pupilright = new THREE.Mesh(pupilgeo, pupilmat);
-      pupilright.position.set(8, faceHeight/4, 15.2);
+      pupilright.position.set(8, faceHeight / 4, 15.2);
 
 
       head.add(eyeleft);
@@ -230,27 +233,27 @@
 
 
 
-    var truetail = new THREE.Object3D();
-    truetail.name= "taily"
-      var tailGeo1 = new THREE.CylinderGeometry(3, 3, 20,20);
-      var tailGeo2 = new THREE.CylinderGeometry(3, 3, 60,20);
+      var truetail = new THREE.Object3D();
+      truetail.name = "taily"
+      var tailGeo1 = new THREE.CylinderGeometry(3, 3, 20, 20);
+      var tailGeo2 = new THREE.CylinderGeometry(3, 3, 60, 20);
       var tail1 = new THREE.Mesh(tailGeo1, whiteMat);
       var tail2 = new THREE.Mesh(tailGeo2, greyMat);
 
       //tail1.position.set(0,-bodyHeight*Math.cos(bodyrotationx)/2+10,-0-bodyHeight*Math.sin(bodyrotationx))
-      tail2.position.set(0,30,-15)
+      tail2.position.set(0, 30, -15)
 
-      tail1.rotateX(Math.PI/2)
-      tail2.rotateX(-Math.PI/16)
+      tail1.rotateX(Math.PI / 2)
+      tail2.rotateX(-Math.PI / 16)
 
-    //   tail1.rotateY(bodyrotation)
-    //   tail2.rotateY(bodyrotation)
+      //   tail1.rotateY(bodyrotation)
+      //   tail2.rotateY(bodyrotation)
 
       truetail.add(tail1);
       truetail.add(tail2);
       //truetail.position.set(0,-bodyHeight*Math.cos(bodyrotationx)/2+10,-0-bodyHeight*Math.sin(bodyrotationx))
-      truetail.position.set(0,-(bodyHeight*1.8+faceHeight)/2*Math.cos(bodyrotationx)+10*Math.sin(bodyrotationx),-(bodyHeight*1.8+faceHeight)/2*Math.sin(bodyrotationx)-10*Math.cos(bodyrotationx)-5)
-      truetail.rotateZ(tailRotation*Math.sin(tailmod))
+      truetail.position.set(0, -(bodyHeight * 1.8 + faceHeight) / 2 * Math.cos(bodyrotationx) + 10 * Math.sin(bodyrotationx), -(bodyHeight * 1.8 + faceHeight) / 2 * Math.sin(bodyrotationx) - 10 * Math.cos(bodyrotationx) - 5)
+      truetail.rotateZ(tailRotation * Math.sin(tailmod))
       cat.add(truetail);
 
 
@@ -258,12 +261,12 @@
 
 
 
-cat.add(head)
+      cat.add(head)
 
 
 
 
-    return cat;
+      return cat;
     }
 
 
@@ -314,8 +317,8 @@ cat.add(head)
     var scene = new THREE.Scene();
 
     var renderer = new THREE.WebGLRenderer();
-     var canvas = renderer.domElement;
-  state.renderer = renderer;  // save this so that others can use it.
+    var canvas = renderer.domElement;
+    state.renderer = renderer;  // save this so that others can use it.
     state.scene = scene;        // save this so that others can use it.
     var parent = document.body;
     parent.appendChild(canvas);
@@ -329,188 +332,203 @@ cat.add(head)
     var cat = caty();
     scene.add(cat)
 
-      var ambLight = new THREE.AmbientLight(0xffffff, 1);scene.add(ambLight);
+    var ambLight = new THREE.AmbientLight(0xffffff, 1); scene.add(ambLight);
 
     //set up camera controls so we can use mouse to pan around scene
     render();
-//todo
-var animationID = null
-var t = 75
+    //todo
+    var animationID = null
+    var t = 75
 
-function animate(timestamp)
-{
-  var toil = cat.getObjectByName("taily")
-  t = t + 1;
-  if(t%100 <= 50)
-  {
-    toil.rotateZ(0.0174533)
-  }
-  else
-  {
-    toil.rotateZ(-0.0174533)
-  }
-  
-  animationID = requestAnimationFrame(animate)
-  render();
+    function animate(timestamp) {
+      var toil = cat.getObjectByName("taily")
+      t = t + 1;
+      if (t % 100 < 50) {
+        toil.rotateZ(0.0174533)
+      }
+      else {
+        toil.rotateZ(-0.0174533)
+      }
 
-}
-//cat.getObjectByName("taily").rotateZ(Math.Pi/4*Math.sin(0))
-animate();
+      animationID = requestAnimationFrame(animate)
+      render();
+
+    }
+    //cat.getObjectByName("taily").rotateZ(Math.Pi/4*Math.sin(0))
+    animate();
     setupCameraControls();
     var params = {
-            headRadius: 3,
-            hatHeight: 20, 
-            bottomHatRadius: 16,
-            bottomHatHeight: 5,
-            hatRadius: 18,
-            hatRotation: 0,
-            zPlaneRotation: 0,
-            xPlaneRotation:0,
-            hatSeg: 1,
-            yHeadPosition: 9,
-            topRadius: 15,
-            onCat: true
-        };
+      headRadius: 3,
+      hatHeight: 20,
+      bottomHatRadius: 16,
+      bottomHatHeight: 5,
+      hatRadius: 18,
+      hatRotation: 0,
+      zPlaneRotation: 0,
+      xPlaneRotation: 0,
+      hatSeg: 1,
+      yHeadPosition: 9,
+      topRadius: 15,
+      onCat: true
+    };
 
-        function createHat(texture){
-            // create and return a Mesh for the hat
-            var height = params.hatHeight;
-            var radius = params.topRadius;
-            var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
-            var silkMaterial = new THREE.MeshBasicMaterial({ color: "red"});
-            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
-            return hatMesh;
-        }
-        function createBottomHat(texture){
-            // create and return a Mesh for the bottom of the hat
-            var radius = params.hatRadius
-            var height = params.bottomHatHeight
-            var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
-            var silkMaterial = new THREE.MeshBasicMaterial({ color: "blue"});
-            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
-            return hatMesh;
-        }
+    function createHat(texture) {
+      // create and return a Mesh for the hat
+      var height = params.hatHeight;
+      var radius = params.topRadius;
+      var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
+      var silkMaterial = new THREE.MeshBasicMaterial({ color: "red" });
+      var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+      return hatMesh;
+    }
+    function createBottomHat(texture) {
+      // create and return a Mesh for the bottom of the hat
+      var radius = params.hatRadius
+      var height = params.bottomHatHeight
+      var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
+      var silkMaterial = new THREE.MeshBasicMaterial({ color: "blue" });
+      var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+      return hatMesh;
+    }
 
-        function createDesignHat(texture){
-            // create and return a Mesh for the design of the hat
-            var radius = params.topRadius;
-            var hatGeometry = new THREE.CylinderGeometry(radius + 0.1, radius + 0.1, 3, 40, params.hatSeg);
-            var silkMaterial = new THREE.MeshBasicMaterial({ color: "yellow"});
-            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
-            return hatMesh;
-        }
+    function createDesignHat(texture) {
+      // create and return a Mesh for the design of the hat
+      var radius = params.topRadius;
+      var hatGeometry = new THREE.CylinderGeometry(radius + 0.1, radius + 0.1, 3, 40, params.hatSeg);
+      var silkMaterial = new THREE.MeshBasicMaterial({ color: "yellow" });
+      var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+      return hatMesh;
+    }
 
-        var hatframe;
-        var hat;
-        var bottomHat;
-        var design;
-        function addHat(texture){
-            // adds all components of hat together
-            hatframe = new THREE.Object3D();
-            hat = createHat(texture);
-            bottomHat = createBottomHat(texture);
-            design = createDesignHat(texture);
-            hatframe.add(hat);
-            hatframe.add(bottomHat);
-            hatframe.add(design)
-            // position of hat on the side
-            hat.position.set(90,-40,0)
-            bottomHat.position.set(90,-48,0)
-            design.position.set(90,-44,0)
-            hat.rotation.y = params.hatRotation;
-            bottomHat.rotation.y = params.hatRotation;
-            scene.add(hatframe);
-            renderer.render(scene, camera);
-        }
-         var texture = 1
-         addHat(texture);
-               //eventListener for interactive hat
-      document.addEventListener('click', onClick, false);
+    var hatframe;
+    var hat;
+    var bottomHat;
+    var design;
+    function addHat(texture) {
+      // adds all components of hat together
+      hatframe = new THREE.Object3D();
+      hat = createHat(texture);
+      bottomHat = createBottomHat(texture);
+      design = createDesignHat(texture);
+      hatframe.add(hat);
+      hatframe.add(bottomHat);
+      hatframe.add(design)
+      // position of hat on the side
+      hat.position.set(90, -40, 0)
+      bottomHat.position.set(90, -48, 0)
+      design.position.set(90, -44, 0)
+      hat.rotation.y = params.hatRotation;
+      bottomHat.rotation.y = params.hatRotation;
+      scene.add(hatframe);
+      renderer.render(scene, camera);
+    }
+    var texture = 1
+    addHat(texture);
+    //eventListener for interactive hat
+    document.addEventListener('click', onClick, false);
 
-// set up raycasting
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2();
-var c1 = renderer.domElement;
+    // set up raycasting
+    var raycaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2();
+    var c1 = renderer.domElement;
 
-function onClick(event) {
-   if (!event.shiftKey) return;    
-   if (event.target == c1) {
-      var rect = event.target.getBoundingClientRect();
-      var canvasX = event.clientX - rect.left;
-      var canvasY = event.clientY - rect.top;
-   } else {
-      return;
-   }
-   console.log("Click clack the mouse is ...")
-   // get mouse coordinates in the range from -1 to +1 (canvas is 800 x 500 pixels)
-   mouse.x = (canvasX / 750) * 2 - 1;
-   mouse.y = -(canvasY / 500) * 2 + 1;
-   raycaster.setFromCamera(mouse, camera);
-   var intersects = raycaster.intersectObjects(scene.children, true);
-   // if hat on cat, return to shelf
-   if (intersects.length > 0) {
-      scene.remove(hatframe);
-      if(params.onCat){
-          hat.position.set(0,faceHeight,0)
-          bottomHat.position.set(0,-8+faceHeight,0)
-          design.position.set(0,-4+faceHeight,0)
+    function onClick(event) {
+      if (!event.shiftKey) return;
+      if (event.target == c1) {
+        var rect = event.target.getBoundingClientRect();
+        var canvasX = event.clientX - rect.left;
+        var canvasY = event.clientY - rect.top;
+      } else {
+        return;
+      }
+      console.log("Click clack the mouse is ...")
+      // get mouse coordinates in the range from -1 to +1 (canvas is 800 x 500 pixels)
+      mouse.x = (canvasX / 750) * 2 - 1;
+      mouse.y = -(canvasY / 500) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      var intersects = raycaster.intersectObjects(scene.children, true);
+      // if hat on cat, return to shelf
+      if (intersects.length > 0) {
+        scene.remove(hatframe);
+        if (params.onCat) {
+          hat.position.set(0, faceHeight, 0)
+          bottomHat.position.set(0, -8 + faceHeight, 0)
+          design.position.set(0, -4 + faceHeight, 0)
           params.onCat = false
           console.log("... on hat")
-      }
-      else{
-          hat.position.set(90,-40,0)
-          bottomHat.position.set(90,-48,0)
-          design.position.set(90,-44,0)
+        }
+        else {
+          hat.position.set(90, -40, 0)
+          bottomHat.position.set(90, -48, 0)
+          design.position.set(90, -44, 0)
           params.onCat = true;
           console.log("... not on hat")
+        }
+        scene.add(hatframe)
+        console.log("mousedown");
+        renderer.render(scene, camera);
       }
-      scene.add(hatframe)
-      console.log("mousedown");
-      renderer.render(scene, camera);
-   }
-}
-  renderer.render(scene, camera);
+    }
+    renderer.render(scene, camera);
 
-          //need to add keypress callback because we ditched TW script!
-          document.addEventListener("keypress", (event) => {
-            const key = event.key;
-            console.log("Key pressed: " + key);
-            switch (key) {
-                case "1":
-                    scene.remove(camera)
-                    cameraParams.eyeX = 0;
-                    cameraParams.eyeY = 0;
-                    cameraParams.eyeZ = 150;
-                    cameraParams.atX = 0;
-                    cameraParams.atY = 0;
-                    cameraParams.atZ = 0;
-                    camera = setupCamera(cameraParams);
-                    scene.add(camera)
-                    render();
-                    break;
-                case "2":
-                    scene.remove(camera)
-                    cameraParams.eyeX = 20;
-                    cameraParams.eyeY = -18;
-                    cameraParams.eyeZ = 10;
-                    cameraParams.atX = 90;
-                    cameraParams.atY = -48;
-                    cameraParams.atZ = 0;
-                    camera = setupCamera(cameraParams);
-                    scene.add(camera);
-                    render();
-                    break;
+    //need to add keypress callback because we ditched TW script!
+    document.addEventListener("keypress", (event) => {
+      const key = event.key;
+      console.log("Key pressed: " + key);
+      switch (key) {
+        case "1":
+          scene.remove(camera)
+          cameraParams.eyeX = 0;
+          cameraParams.eyeY = 0;
+          cameraParams.eyeZ = 150;
+          cameraParams.atX = 0;
+          cameraParams.atY = 0;
+          cameraParams.atZ = 0;
+          camera = setupCamera(cameraParams);
+          scene.add(camera)
+          render();
+          break;
+        case "2":
+          scene.remove(camera)
+          cameraParams.eyeX = 20;
+          cameraParams.eyeY = -18;
+          cameraParams.eyeZ = 10;
+          cameraParams.atX = 90;
+          cameraParams.atY = -48;
+          cameraParams.atZ = 0;
+          camera = setupCamera(cameraParams);
+          scene.add(camera);
+          render();
+          break;
+        case "s":
+          scene.remove(cat)
+          if(sitting)
+          {
+            sitting = false;
+            bodyrotationx = Math.PI/2.2
+            cat = caty()
+            scene.add(cat)
+          }
+          else
+          {
+            sitting = true;
+            bodyrotationx = Math.PI/8
+            cat = caty()
+            scene.add(cat)
 
-                default:
-                    break;
-            }
-            setupCameraControls(); //probably a better way to fix this...
-        });
+          }
+
+
+        default:
+          break;
+      }
+      setupCameraControls(); //probably a better way to fix this...
+    });
 
   // add keypress code 
-</script>
-<script id="allhatscode"></script>
-<!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
+  </script>
+  <script id="allhatscode"></script>
+  <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
 
 </body>
 
