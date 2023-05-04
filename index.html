@@ -102,7 +102,12 @@
       torso2.rotateY(bodyrotation);
       torso2.position.set(0, -(bodyHeight + faceHeight) / 2 * Math.cos(bodyrotationx) - 1 * Math.sin(bodyrotationx), -(faceHeight + bodyHeight) / 2 * Math.sin(bodyrotationx) + 1 * Math.cos(bodyrotationx))
 
-
+      var collargeom = new THREE.CylinderGeometry(14, 15, faceHeight/2, bodysegments);
+      var collar = new THREE.Mesh(collargeom, redMat);
+      collar.rotateX(bodyrotationx);
+      collar.rotateY(bodyrotation);
+      collar.position.set(0, -(faceHeight) / 2 * Math.cos(bodyrotationx), -( faceHeight) / 2 * Math.sin(bodyrotationx))
+      cat.add(collar)
       var limb1 = new THREE.Object3D();
       var limb2 = new THREE.Object3D();
       var limb3 = new THREE.Object3D();
