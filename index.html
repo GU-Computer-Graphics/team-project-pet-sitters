@@ -333,29 +333,29 @@ cat.add(head)
 //todo
     setupCameraControls();
     var params = {
-            headRadius: 3,
-            hatHeight: 20, 
-            bottomHatRadius: 16,
-            bottomHatHeight: 5,
-            hatRadius: 18,
-            hatRotation: 0,
-            zPlaneRotation: 0,
-            xPlaneRotation:0,
-            hatSeg: 1,
-            yHeadPosition: 9,
-            topRadius: 15,
-            onCat: true
-        };
+      headRadius: 3,
+      hatHeight: 20, 
+      bottomHatRadius: 16,
+      bottomHatHeight: 5,
+      hatRadius: 18,
+      hatRotation: 0,
+      zPlaneRotation: 0,
+      xPlaneRotation:0,
+      hatSeg: 1,
+      yHeadPosition: 9,
+      topRadius: 15,
+      onCat: true
+    };
 
-        function createHat(texture){
-            // create and return a Mesh for the hat
-            var height = params.hatHeight;
-            var radius = params.topRadius;
-            var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
-            var silkMaterial = new THREE.MeshBasicMaterial({ color: "red"});
-            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
-            return hatMesh;
-        }
+    function createHat(texture){
+      // create and return a Mesh for the hat
+      var height = params.hatHeight;
+      var radius = params.topRadius;
+      var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
+      var silkMaterial = new THREE.MeshBasicMaterial({ color: "red"});
+      var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+      return hatMesh;
+    }
         function createBottomHat(texture){
             // create and return a Mesh for the bottom of the hat
             var radius = params.hatRadius
@@ -400,7 +400,8 @@ cat.add(head)
          var texture = 1
          addHat(texture);
                //eventListener for interactive hat
-      document.addEventListener('click', onClick, false);
+      
+    document.addEventListener('click', onClick, false);
 
 // set up raycasting
 var raycaster = new THREE.Raycaster();
