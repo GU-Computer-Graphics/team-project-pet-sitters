@@ -23,6 +23,7 @@
 <body>
     <center><h1>Cat</h1></center>
     <script>
+      var faceHeight = 22;
     function caty()
     {
       var cat=new THREE.Object3D();
@@ -72,7 +73,7 @@
     var handHeight = 20;
     var bodyHeight = 70;
     var armHeight = 50 ;
-    var faceHeight = 22;
+    
     var bodysegments = 4;
     var bodyrotation = Math.PI/4
     var bodyrotationx = Math.PI/2.2
@@ -431,9 +432,9 @@ function onClick(event) {
    if (intersects.length > 0) {
       scene.remove(hatframe);
       if(params.onCat){
-          hat.position.set(-0.5,64,27)
-          bottomHat.position.set(-0.5,56,27)
-          design.position.set(-0.5,60,27)
+          hat.position.set(0,faceHeight,0)
+          bottomHat.position.set(0,-8+faceHeight,0)
+          design.position.set(0,-4+faceHeight,0)
           params.onCat = false
           console.log("... on hat")
       }
