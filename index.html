@@ -357,6 +357,12 @@
     //cat.getObjectByName("taily").rotateZ(Math.Pi/4*Math.sin(0))
     animate();
     setupCameraControls();
+
+    // code for creating top hat
+    var tl = new THREE.TextureLoader();
+    var texture1 = tl.load("silk.jpeg", render);
+    var texture2 = tl.load("yellowsilk.jpeg", render);
+    
     var params = {
       headRadius: 3,
       hatHeight: 20, 
@@ -372,30 +378,30 @@
       onCat: true
     };
 
-    function createHat(texture){
+    function createHat(){
       // create and return a Mesh for the hat
       var height = params.hatHeight;
       var radius = params.topRadius;
       var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
-      var silkMaterial = new THREE.MeshBasicMaterial({ color: "red"});
+      var silkMaterial = new THREE.MeshBasicMaterial({ map: texture1});
       var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
       return hatMesh;
     }
-        function createBottomHat(texture){
+        function createBottomHat(){
             // create and return a Mesh for the bottom of the hat
             var radius = params.hatRadius
             var height = params.bottomHatHeight
             var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
-            var silkMaterial = new THREE.MeshBasicMaterial({ color: "blue"});
+            var silkMaterial = new THREE.MeshBasicMaterial({ map: texture1});
             var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
             return hatMesh;
         }
 
-    function createDesignHat(texture) {
+    function createDesignHat() {
       // create and return a Mesh for the design of the hat
       var radius = params.topRadius;
       var hatGeometry = new THREE.CylinderGeometry(radius + 0.1, radius + 0.1, 3, 40, params.hatSeg);
-      var silkMaterial = new THREE.MeshBasicMaterial({ color: "yellow" });
+      var silkMaterial = new THREE.MeshBasicMaterial({ map: texture2});
       var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
       return hatMesh;
     }
@@ -404,12 +410,12 @@
         var hat;
         var bottomHat;
         var design;
-        function addHat(texture){
+        function addHat(){
             // adds all components of hat together
             hatframe = new THREE.Object3D();
-            hat = createHat(texture);
-            bottomHat = createBottomHat(texture);
-            design = createDesignHat(texture);
+            hat = createHat();
+            bottomHat = createBottomHat();
+            design = createDesignHat();
             hatframe.add(hat);
             hatframe.add(bottomHat);
             hatframe.add(design)
@@ -422,8 +428,8 @@
             scene.add(hatframe);
             renderer.render(scene, camera);
         }
-         var texture = 1
-         addHat(texture);
+
+         addHat();
                //eventListener for interactive hat
       
     document.addEventListener('click', onClick, false);
@@ -491,12 +497,12 @@
           break;
         case "2":
           scene.remove(camera)
-          cameraParams.eyeX = 20;
-          cameraParams.eyeY = -18;
+          cameraParams.eyeX = 160;
+          cameraParams.eyeY = -50;
           cameraParams.eyeZ = 10;
-          cameraParams.atX = 90;
-          cameraParams.atY = -48;
-          cameraParams.atZ = 0;
+          // cameraParams.atX = 90;
+          // cameraParams.atY = -48;
+          // cameraParams.atZ = 0;
           camera = setupCamera(cameraParams);
           scene.add(camera);
           render();
