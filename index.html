@@ -35,6 +35,11 @@
       pupilColor: 0x4444cc,
       collarColor: 0xcc0000
     }
+    var pinkMat = new THREE.MeshLambertMaterial({
+        color: 0xe0877e,//0xe0a79f, 
+        shading: THREE.FlatShading
+      });
+      var bodyHeight = 70;
     function caty() {
       var cat = new THREE.Object3D();
 
@@ -43,10 +48,7 @@
         shading: THREE.FlatShading
       });
 
-      var pinkMat = new THREE.MeshLambertMaterial({
-        color: 0xe0877e,//0xe0a79f, 
-        shading: THREE.FlatShading
-      });
+      
 
       var redMat = new THREE.MeshLambertMaterial({
         color: 0x630d15,
@@ -81,7 +83,7 @@
       });
 
       var handHeight = 20;
-      var bodyHeight = 70;
+      
       var armHeight = 50;
 
       var bodysegments = 4;
@@ -101,7 +103,12 @@
       torso2.rotateY(bodyrotation);
       torso2.position.set(0, -(bodyHeight + faceHeight) / 2 * Math.cos(bodyrotationx) - 1 * Math.sin(bodyrotationx), -(faceHeight + bodyHeight) / 2 * Math.sin(bodyrotationx) + 1 * Math.cos(bodyrotationx))
 
-
+      var collargeom = new THREE.CylinderGeometry(14, 15, faceHeight/2, bodysegments);
+      var collar = new THREE.Mesh(collargeom, redMat);
+      collar.rotateX(bodyrotationx);
+      collar.rotateY(bodyrotation);
+      collar.position.set(0, -(faceHeight) / 2 * Math.cos(bodyrotationx), -( faceHeight) / 2 * Math.sin(bodyrotationx))
+      cat.add(collar)
       var limb1 = new THREE.Object3D();
       var limb2 = new THREE.Object3D();
       var limb3 = new THREE.Object3D();
@@ -345,6 +352,11 @@
     var animationID = null
     var t = 75
 
+
+    var ballgeo = new THREE.SphereGeometry(7,32,16)
+    var ballmesh = new THREE.Mesh(ballgeo, pinkMat)
+    scene.add(ballmesh)
+
     function animate(timestamp) {
       var toil = cat.getObjectByName("taily")
       t = t + 1;
@@ -354,6 +366,7 @@
       else {
         toil.rotateZ(-0.0174533)
       }
+      ballmesh.position.set(bodyHeight*Math.sin(t*0.0174533/5),-bodyHeight,  bodyHeight*Math.cos(t*0.0174533/5))
 
       animationID = requestAnimationFrame(animate)
       render();
