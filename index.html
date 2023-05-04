@@ -32,7 +32,8 @@
     var bodyrotationx = Math.PI / 8
     var sitting = true; 
     var catCustoms = {
-      pupilColor: 0x4444cc
+      pupilColor: 0x4444cc,
+      collarColor: 0xcc0000
     }
     function caty() {
       var cat = new THREE.Object3D();
@@ -541,7 +542,6 @@
         // load correct barn to scene
       function redoScene(){
         scene.remove(cat);
-
         if(guiParams.eyeColor == "blueEyes"){
           catCustoms.pupilColor = 0x4444cc;
           cat = caty();
@@ -557,15 +557,32 @@
           cat = caty();
           scene.add(cat);
         }
+        if(guiParams.collarColor == "redCollar"){
+          catCustoms.collarColor = 0xcc0000;
+          cat = caty();
+          scene.add(cat);
+        }
+        if(guiParams.collarColor == "pinkCollar"){
+          catCustoms.collarColor = 0xde66ae;
+          cat = caty();
+          scene.add(cat);
+        }
+        if(guiParams.collarColor == "yellowCollar"){
+          catCustoms.collarColor = 0xf2af13;
+          cat = caty();
+          scene.add(cat);
+        }
     }
     // setup GUI
     var guiParams = {
       eyeColor: "blueEyes",
-      // groundTexture: "grass"
+      // groundTexture: "grass",
+      collarColor: "redCollar"
     }
 
     var gui = new dat.GUI;
     gui.add(guiParams, "eyeColor", ["blueEyes", "greenEyes", "purpleEyes"]).onChange(redoScene).name("Eye Color");
+    gui.add(guiParams, "collarColor", ["redCollar", "pinkCollar", "yellowCollar"]).onChange(redoScene).name("Collar Color");
 
   // add keypress code 
   </script>
