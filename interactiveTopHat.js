@@ -1,31 +1,5 @@
-<!doctype html>
-<html lang="en">
 
-<head>
-   <meta charset="utf-8">
-   <title>Interactive Top Hat</title>
-   <style>
-      canvas {
-         display: block;
-         margin: 10px;
-         width: 800px;
-         height: 500px
-      }
-   </style>
-
-   <script src="./js/three.js"> </script>
-   <script src="./js/SceneUtils.js"></script>
-   <script src="./js/OrbitControls.js"></script>
-   <script src="./js/tw.js"></script>
-   <script src="./js/dat.gui.js"></script>
-
-</head>
-
-<body>
-   <h2>Interactive Top Hat</h2>
-   <h4>Hold down the <code>shift</code> key while clicking on an object in the scene to put on cat's head, do the same to return to shelf</h4>
-   <script id="interactiveTopHat">
-        var params = {
+        params = {
             headRadius: 3,
             hatHeight: 3, 
             bottomHatRadius: 2.7,
@@ -38,9 +12,9 @@
         };
 
         // colors and materials for the top hat
-        var headMaterial = new THREE.MeshBasicMaterial({ color: 0xD08050 });
-        var blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        var goldMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700});
+         headMaterial = new THREE.MeshBasicMaterial({ color: 0xD08050 });
+         blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+         goldMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700});
 
         function createHat(texture){
             // create and return a Mesh for the hat
@@ -188,28 +162,21 @@
          raycaster.setFromCamera(mouse, camera);
          var intersects = raycaster.intersectObjects(scene.children, true);
          // if hat on cat, return to shelf
-         console.log("Click clack the mouse is ...")
          if (intersects.length > 0) {
             scene.remove(hatframe);
             if(params.onCat){
                hatframe.position.x = 10;   
                 params.onCat = false
-                console.log("... on hat")
             }
             else{
                 hatframe.position.x = -10; 
                 params.onCat = true;
-                console.log("... not on hat")
             }
             scene.add(hatframe)
-           // console.log("mousedown");
+            console.log("mousedown");
             renderer.render(scene, camera);
          }
       }
 
       renderer.render(scene, camera);
-
-   </script>
-</body>
-
-</html>
+    

@@ -283,27 +283,27 @@ cat.add(head)
       near: 1,
       far: 250,
       fov: 75,                // degrees
-      aspectRatio: 700 / 500,   // from dimensions of the canvas, see CSS
+      aspectRatio: 950 / 500,   // from dimensions of the canvas, see CSS
       atX: 0,
       atY: 0,
       atZ: 0,
-      eyeX: 00,
-      eyeY: 0,
+      eyeX: 0,
+      eyeY: 50,
       eyeZ: 150,
       upX: 0,
       upY: 1,
-      upZ: 0
+      upZ: 0,
     };
 
     var scene = new THREE.Scene();
 
     var renderer = new THREE.WebGLRenderer();
      var canvas = renderer.domElement;
-  state.renderer = renderer;  // save this so that others can use it.
+    state.renderer = renderer;  // save this so that others can use it.
     state.scene = scene;        // save this so that others can use it.
     var parent = document.body;
     parent.appendChild(canvas);
-    renderer.setSize(750, 500);
+    renderer.setSize(950, 500);
     renderer.setClearColor(new THREE.Color(0xcccccc), 1); //darker greyish... it's evening!
 
     //7. Set up a camera for the scene
@@ -319,6 +319,126 @@ cat.add(head)
     render();
 
     setupCameraControls();
+    var params = {
+            headRadius: 3,
+            hatHeight: 20, 
+            bottomHatRadius: 16,
+            bottomHatHeight: 5,
+            hatRadius: 18,
+            hatRotation: 0,
+            zPlaneRotation: 0,
+            xPlaneRotation:0,
+            hatSeg: 1,
+            yHeadPosition: 9,
+            topRadius: 15,
+            onCat: true
+        };
+
+        function createHat(texture){
+            // create and return a Mesh for the hat
+            var height = params.hatHeight;
+            var radius = params.topRadius;
+            var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
+            var silkMaterial = new THREE.MeshBasicMaterial({ color: "red"});
+            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+            return hatMesh;
+        }
+        function createBottomHat(texture){
+            // create and return a Mesh for the bottom of the hat
+            var radius = params.hatRadius
+            var height = params.bottomHatHeight
+            var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
+            var silkMaterial = new THREE.MeshBasicMaterial({ color: "blue"});
+            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+            return hatMesh;
+        }
+
+        function createDesignHat(texture){
+            // create and return a Mesh for the design of the hat
+            var radius = params.topRadius;
+            var hatGeometry = new THREE.CylinderGeometry(radius + 0.1, radius + 0.1, 3, 40, params.hatSeg);
+            var silkMaterial = new THREE.MeshBasicMaterial({ color: "yellow"});
+            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+            return hatMesh;
+        }
+
+        var hatframe;
+        var hat;
+        var bottomHat;
+        var design;
+        function addHat(texture){
+            // adds all components of hat together
+            hatframe = new THREE.Object3D();
+            hat = createHat(texture);
+            bottomHat = createBottomHat(texture);
+            design = createDesignHat(texture);
+            hatframe.add(hat);
+            hatframe.add(bottomHat);
+            hatframe.add(design)
+            // position of hat on the side
+            hat.position.set(90,0,27)
+            bottomHat.position.set(90,-8,27)
+            design.position.set(90,-4,27)
+            hat.rotation.y = params.hatRotation;
+            bottomHat.rotation.y = params.hatRotation;
+            // position of hat on cat head
+            // hat.position.set(-0.5,64,27)
+            // bottomHat.position.set(-0.5,56,27)
+            // design.position.set(-0.5,60,27)
+            scene.add(hatframe);
+            // hatframe.position.set(0, 64, 28)
+            renderer.render(scene, camera);
+           // TW.render();
+        }
+         var texture = 1
+         addHat(texture);
+               //eventListener for interactive hat
+      document.addEventListener('click', onClick, false);
+
+// set up raycasting
+var raycaster = new THREE.Raycaster();
+var mouse = new THREE.Vector2();
+var c1 = renderer.domElement;
+
+function onClick(event) {
+   if (!event.shiftKey) return;    
+   if (event.target == c1) {
+      var rect = event.target.getBoundingClientRect();
+      var canvasX = event.clientX - rect.left;
+      var canvasY = event.clientY - rect.top;
+   } else {
+      return;
+   }
+   console.log("Click clack the mouse is ...")
+   // get mouse coordinates in the range from -1 to +1 (canvas is 800 x 500 pixels)
+   mouse.x = (canvasX / 950) * 2 - 1;
+   mouse.y = -(canvasY / 500) * 2 + 1;
+   raycaster.setFromCamera(mouse, camera);
+   var intersects = raycaster.intersectObjects(scene.children, true);
+   // if hat on cat, return to shelf
+   if (intersects.length > 0) {
+      scene.remove(hatframe);
+      if(params.onCat){
+          hat.position.set(-0.5,64,27)
+          bottomHat.position.set(-0.5,56,27)
+          design.position.set(-0.5,60,27)
+          params.onCat = false
+          console.log("... on hat")
+      }
+      else{
+          hat.position.set(90,0,27)
+          bottomHat.position.set(90,-8,27)
+          design.position.set(90,-4,27)
+          params.onCat = true;
+          console.log("... not on hat")
+      }
+      scene.add(hatframe)
+      console.log("mousedown");
+      renderer.render(scene, camera);
+   }
+}
+
+renderer.render(scene, camera);
 
 </script>
 <script id="allhatscode"></script>
