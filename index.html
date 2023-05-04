@@ -24,6 +24,8 @@
     <center><h1>Cat</h1></center>
     <script>
       var faceHeight = 22;
+      var tailRotation = Math.PI/4;
+      var tailmod = 0;
     function caty()
     {
       var cat=new THREE.Object3D();
@@ -76,8 +78,8 @@
     
     var bodysegments = 4;
     var bodyrotation = Math.PI/4
-    var bodyrotationx = Math.PI/2.2
-    var tailRotation = Math.PI/4
+    var bodyrotationx = Math.PI/8
+    
 
     var torsoGeom = new THREE.CylinderGeometry(13, 20 ,bodyHeight,bodysegments);
     var torso = new THREE.Mesh(torsoGeom,greyMat);
@@ -229,6 +231,7 @@
 
 
     var truetail = new THREE.Object3D();
+    truetail.name= "taily"
       var tailGeo1 = new THREE.CylinderGeometry(3, 3, 20,20);
       var tailGeo2 = new THREE.CylinderGeometry(3, 3, 60,20);
       var tail1 = new THREE.Mesh(tailGeo1, whiteMat);
@@ -247,7 +250,7 @@
       truetail.add(tail2);
       //truetail.position.set(0,-bodyHeight*Math.cos(bodyrotationx)/2+10,-0-bodyHeight*Math.sin(bodyrotationx))
       truetail.position.set(0,-(bodyHeight*1.8+faceHeight)/2*Math.cos(bodyrotationx)+10*Math.sin(bodyrotationx),-(bodyHeight*1.8+faceHeight)/2*Math.sin(bodyrotationx)-10*Math.cos(bodyrotationx)-5)
-      truetail.rotateZ(tailRotation)
+      truetail.rotateZ(tailRotation*Math.sin(tailmod))
       cat.add(truetail);
 
 
@@ -331,31 +334,53 @@ cat.add(head)
     //set up camera controls so we can use mouse to pan around scene
     render();
 //todo
+var animationID = null
+var t = 75
+
+function animate(timestamp)
+{
+  var toil = cat.getObjectByName("taily")
+  t = t + 1;
+  if(t%100 <= 50)
+  {
+    toil.rotateZ(0.0174533)
+  }
+  else
+  {
+    toil.rotateZ(-0.0174533)
+  }
+  
+  animationID = requestAnimationFrame(animate)
+  render();
+
+}
+//cat.getObjectByName("taily").rotateZ(Math.Pi/4*Math.sin(0))
+animate();
     setupCameraControls();
     var params = {
-            headRadius: 3,
-            hatHeight: 20, 
-            bottomHatRadius: 16,
-            bottomHatHeight: 5,
-            hatRadius: 18,
-            hatRotation: 0,
-            zPlaneRotation: 0,
-            xPlaneRotation:0,
-            hatSeg: 1,
-            yHeadPosition: 9,
-            topRadius: 15,
-            onCat: true
-        };
+      headRadius: 3,
+      hatHeight: 20, 
+      bottomHatRadius: 16,
+      bottomHatHeight: 5,
+      hatRadius: 18,
+      hatRotation: 0,
+      zPlaneRotation: 0,
+      xPlaneRotation:0,
+      hatSeg: 1,
+      yHeadPosition: 9,
+      topRadius: 15,
+      onCat: true
+    };
 
-        function createHat(texture){
-            // create and return a Mesh for the hat
-            var height = params.hatHeight;
-            var radius = params.topRadius;
-            var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
-            var silkMaterial = new THREE.MeshBasicMaterial({ color: "red"});
-            var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
-            return hatMesh;
-        }
+    function createHat(texture){
+      // create and return a Mesh for the hat
+      var height = params.hatHeight;
+      var radius = params.topRadius;
+      var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
+      var silkMaterial = new THREE.MeshBasicMaterial({ color: "red"});
+      var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+      return hatMesh;
+    }
         function createBottomHat(texture){
             // create and return a Mesh for the bottom of the hat
             var radius = params.hatRadius
@@ -374,7 +399,7 @@ cat.add(head)
             var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
             return hatMesh;
         }
-        
+
         var hatframe;
         var hat;
         var bottomHat;
@@ -400,7 +425,8 @@ cat.add(head)
          var texture = 1
          addHat(texture);
                //eventListener for interactive hat
-      document.addEventListener('click', onClick, false);
+      
+    document.addEventListener('click', onClick, false);
 
 // set up raycasting
 var raycaster = new THREE.Raycaster();
@@ -445,6 +471,44 @@ function onClick(event) {
    }
 }
   renderer.render(scene, camera);
+
+          //need to add keypress callback because we ditched TW script!
+          document.addEventListener("keypress", (event) => {
+            const key = event.key;
+            console.log("Key pressed: " + key);
+            switch (key) {
+                case "1":
+                    scene.remove(camera)
+                    cameraParams.eyeX = 0;
+                    cameraParams.eyeY = 0;
+                    cameraParams.eyeZ = 150;
+                    cameraParams.atX = 0;
+                    cameraParams.atY = 0;
+                    cameraParams.atZ = 0;
+                    camera = setupCamera(cameraParams);
+                    scene.add(camera)
+                    render();
+                    break;
+                case "2":
+                    scene.remove(camera)
+                    cameraParams.eyeX = 20;
+                    cameraParams.eyeY = -18;
+                    cameraParams.eyeZ = 10;
+                    cameraParams.atX = 90;
+                    cameraParams.atY = -48;
+                    cameraParams.atZ = 0;
+                    camera = setupCamera(cameraParams);
+                    scene.add(camera);
+                    render();
+                    break;
+
+                default:
+                    break;
+            }
+            setupCameraControls(); //probably a better way to fix this...
+        });
+
+  // add keypress code 
 </script>
 <script id="allhatscode"></script>
 <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
