@@ -29,7 +29,8 @@
             // a render function; assume global variables scene, renderer, and camera
             renderer.render(scene);
         }
-        var renderer = new THREE.WebGLRenderer();
+        var renderer = new THREE.WebGLRenderer( {antialias: true} );
+        renderer.shadowMap.enabled = true;
 
         var tl = new THREE.TextureLoader();
         //outside
@@ -107,20 +108,6 @@
         const axesHelper = new THREE.AxesHelper( 500 );
         scene.add( axesHelper );    
 
-        // var fence = new THREE.Mesh(new THREE.PlaneGeometry(200, 40), colorMaterials[1]);
-        // fence.position.set(-50, 15, 0);
-        // fence.rotation.set(0, 0,Math.PI);
-        // scene.add(fence);
-
-        // var fence1 = new THREE.Mesh(new THREE.PlaneGeometry(140, 40), colorMaterials[1]);
-        // fence1.position.set(-150, 15, 70);
-        // fence1.rotation.set(0,Math.PI/2,0);
-        // scene.add(fence1);
-
-        // var fence2 = new THREE.Mesh(new THREE.PlaneGeometry(140, 40), colorMaterials[1]);
-        // fence2.position.set(50, 15, 70);
-        // fence2.rotation.set(0, Math.PI/2, 0);
-        // scene.add(fence2);
         var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("white")} ); 
 
         var fencePick = new THREE.Object3D();
