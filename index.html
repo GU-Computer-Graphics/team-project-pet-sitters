@@ -374,7 +374,7 @@ cat.add(head)
             var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
             return hatMesh;
         }
-
+        
         var hatframe;
         var hat;
         var bottomHat;
@@ -389,19 +389,13 @@ cat.add(head)
             hatframe.add(bottomHat);
             hatframe.add(design)
             // position of hat on the side
-            hat.position.set(90,0,27)
-            bottomHat.position.set(90,-8,27)
-            design.position.set(90,-4,27)
+            hat.position.set(90,-40,0)
+            bottomHat.position.set(90,-48,0)
+            design.position.set(90,-44,0)
             hat.rotation.y = params.hatRotation;
             bottomHat.rotation.y = params.hatRotation;
-            // position of hat on cat head
-            // hat.position.set(-0.5,64,27)
-            // bottomHat.position.set(-0.5,56,27)
-            // design.position.set(-0.5,60,27)
             scene.add(hatframe);
-            // hatframe.position.set(0, 64, 28)
             renderer.render(scene, camera);
-           // TW.render();
         }
          var texture = 1
          addHat(texture);
@@ -439,9 +433,9 @@ function onClick(event) {
           console.log("... on hat")
       }
       else{
-          hat.position.set(90,0,27)
-          bottomHat.position.set(90,-8,27)
-          design.position.set(90,-4,27)
+          hat.position.set(90,-40,0)
+          bottomHat.position.set(90,-48,0)
+          design.position.set(90,-44,0)
           params.onCat = true;
           console.log("... not on hat")
       }
@@ -450,9 +444,7 @@ function onClick(event) {
       renderer.render(scene, camera);
    }
 }
-
-renderer.render(scene, camera);
-
+  renderer.render(scene, camera);
 </script>
 <script id="allhatscode"></script>
 <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
