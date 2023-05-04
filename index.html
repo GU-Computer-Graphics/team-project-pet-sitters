@@ -423,7 +423,7 @@ function onClick(event) {
    }
    console.log("Click clack the mouse is ...")
    // get mouse coordinates in the range from -1 to +1 (canvas is 800 x 500 pixels)
-   mouse.x = (canvasX / 950) * 2 - 1;
+   mouse.x = (canvasX / 750) * 2 - 1;
    mouse.y = -(canvasY / 500) * 2 + 1;
    raycaster.setFromCamera(mouse, camera);
    var intersects = raycaster.intersectObjects(scene.children, true);
