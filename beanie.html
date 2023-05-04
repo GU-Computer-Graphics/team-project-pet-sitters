@@ -15,7 +15,6 @@
     </style>
 
     <script src="./js/three.js"></script>
-    <script src="./js/tw.js"></script>
     <script src="./js/OrbitControls.js"></script>
     <script src="./js/SceneUtils.js"></script>
     <script src="./js/dat.gui.js"></script>
@@ -25,107 +24,159 @@
 <body>
     <script id="beaniecode">
         // parameters that specify the geometrical structure of the top hat
-        var params = {
-            headRadius: 3,
-            hatHeight: 3, 
-            bottomHatRadius: 2.7,
-            hatRadius: 2.5,
-            hatRotation: 0,
-            zPlaneRotation: 0,
-            xPlaneRotation:0,
-            hatSeg: 1,
-            yHeadPosition: 9
-        };
-
-        function createBase(texture){
-            // create and return a Mesh for the hat
-            var radius = params.hatRadius;
-            var baseGeometry = new THREE.SphereGeometry(radius, 32, 16, 0, 6.29,0, 1.56);
-            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
-            var baseMesh = new THREE.Mesh(baseGeometry, silkMaterial);
-            return baseMesh;
-        }
-
-        function createPompom(texture){
-            // create and return a Mesh for the hat
-            var height = params.hatHeight;
-            var radius = params.hatRadius;
-            var baseGeometry = new THREE.SphereGeometry(1, 32, 16, 0, 6.29,0, 3.14);
-            var silkMaterial = new THREE.MeshPhongMaterial({ color: "0xFFD700", map: texture});
-            var baseMesh = new THREE.Mesh(baseGeometry, silkMaterial);
-            return baseMesh;
-        }
-
-        function addHat(texture){
-            // adds all components of hat together
-            var hatframe = new THREE.Object3D();
-            var hat = createBase(texture[0]);
-            var pompom = createPompom(texture[1]);
-            hatframe.add(hat);
-            hatframe.add(pompom)
-            // calculate position for the center of the head
-            hat.position.y = -3;
-            hat.position.x = 0;
-            scene.add(hatframe);
-            TW.render();
-        }
-
-        // construct a renderer for the scene
+        var scene = new THREE.Scene();
         var renderer = new THREE.WebGLRenderer();
 
-        // create the Scene object
-        var scene = new THREE.Scene();
+        // add perpective camera
+        var camera = new THREE.PerspectiveCamera(70, 1, 1, 1000);
+        camera.position.set(0, 0, 1000);
+        camera.up.set(10, 10, 10);
+      //  camera.lookAt(new THREE.Vector3(0, 0, 0));
+        scene.add(camera);
 
-        // create a head for reference and add to scene
-            // create spotlights
-        function addSpotlights(){
-            // spotlight 1
-            spotlight1 = new THREE.SpotLight(new THREE.Color("white"));
-            spotlight1.position.set(5, 0, 20);
-            target1 = new THREE.Object3D();
-            target1.position.set(0, -3, 0);
-            spotlight1.target = target1;
-            scene.add(spotlight1);
-            scene.add(spotlight1.target);
+        function render(){
+            renderer.render(scene, camera);
         }
-        addSpotlights()
 
-        TW.mainInit(renderer, scene);
-        // colors and materials for the top hat
-        var headMaterial = new THREE.MeshBasicMaterial({ color: 0xD08050 });
-        var blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        var goldMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700});
+      // add two directional light sources
 
-        var roomGeom = new THREE.BoxGeometry(20, 10, 10);
-        var materialArray = [];
-        // colors for [right wall, left wall, ceiling, floor, front wall, back wall]
-        var faceColors = [0x375673, 0x375673, 0x3c4e3a, 0x99784d, 0x375673, 0x375673];
-        for (var i = 0; i < 6; i++) {
-            materialArray.push(new THREE.MeshPhongMaterial({
-                color: faceColors[i],
-                side: THREE.BackSide
-          }));
-        }
-        var roomMesh = new THREE.Mesh(roomGeom, materialArray);
-        scene.add(roomMesh);
+    //   var light1 = new THREE.DirectionalLight(0xffffff, 2);
+    //   light1.position.set(1, 1, 1);
+    //   scene.add(light1);
 
-        TW.cameraSetup(renderer,
-            scene,
-            {
-                minx: -5, maxx: 5,
-                miny: -10, maxy: 15,
-                minz: -5, maxz: 5
-            });
+    //   var light2 = new THREE.DirectionalLight(0xffffff);
+    //   light2.position.set(-1, -1, -1);
+    //   scene.add(light2);
 
-        TW.viewFromAboveFrontSide();
+    //   // create box geometry to use for all the blocks
+    //   var params = {
+    //         headRadius: 3,
+    //         hatHeight: 3, 
+    //         bottomHatRadius: 2.7,
+    //         hatRadius: 2,
+    //         hatRotation: 0,
+    //         zPlaneRotation: 0,
+    //         xPlaneRotation:0,
+    //         hatSeg: 1,
+    //         yHeadPosition: 9
+    //     };
 
-        TW.loadTextures(["yarn.jpg", "pompom.jpg"],
-            function (texture) {
-                addHat(texture);
-            } );
+    //     // colors and materials for the top hat
+    //     var headMaterial = new THREE.MeshBasicMaterial({ color: 0xD08050 });
+    //     var blackMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    //     var goldMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700});
+
+    //     function createHat(texture){
+    //         // create and return a Mesh for the hat
+    //         var height = params.hatHeight;
+    //         var radius = params.hatRadius;
+    //         var hatGeometry = new THREE.CylinderGeometry(radius, radius, height, 40, params.hatSeg);
+    //         var silkMaterial = new THREE.MeshBasicMaterial({ color: "0xFFD700", map: texture});
+    //         var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+    //         return hatMesh;
+    //     }
+    //     function createBottomHat(texture){
+    //         // create and return a Mesh for the bottom of the hat
+    //         var radius = params.bottomHatRadius;
+    //         var hatGeometry = new THREE.CylinderGeometry(radius, radius, 0.45, 40, params.hatSeg);
+    //         var silkMaterial = new THREE.MeshBasicMaterial({ color: "0xFFD700", map: texture});
+    //         var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+    //         return hatMesh;
+    //     }
+
+    //     function createDesignHat(texture){
+    //         // create and return a Mesh for the design of the hat
+    //         var radius = params.hatRadius;
+    //         var hatGeometry = new THREE.CylinderGeometry(radius + 0.1, radius + 0.1, 0.7, 40, params.hatSeg);
+    //         var silkMaterial = new THREE.MeshBasicMaterial({ color: "0xFFD700", map: texture});
+    //         var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
+    //         return hatMesh;
+    //     }
+
+    //     function addHat(textures){
+    //         // adds all components of hat together
+    //         var hatframe = new THREE.Object3D();
+    //         var hat = createHat(textures[0]);
+    //         var bottomHat = createBottomHat(textures[0]);
+    //         var design = createDesignHat(textures[1]);
+    //         hatframe.add(hat);
+    //         hatframe.add(bottomHat);
+    //         hatframe.add(design)
+    //         // calculate position for the center of the head
+    //         hat.position.y = 3.8;
+    //         hat.position.x = 0;
+    //         bottomHat.position.y = 2.3;
+    //         bottomHat.position.x = 0;
+    //         design.position.y = 2.7;
+    //         design.position.x = 0;
+    //         hat.rotation.y = params.hatRotation;
+    //         bottomHat.rotation.y = params.hatRotation;
+    //         scene.add(hatframe);
+    //         //render();
+    //     }
+
+        // var tl = new THREE.TextureLoader();
+        // var texture1 = tl.load("silk.jpeg", render);
+        // var texture2 = tl.load("yellowsilk.jpeg", render);
+        // var textures = [texture1, texture2];
+        //addHat(textures);
+
+        const geometry = new THREE.SphereGeometry( 15, 32, 16 ); 
+const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } ); 
+const sphere = new THREE.Mesh( geometry, material ); scene.add( sphere );
+        //render();
+
+
+    //   TW.loadTextures(["silk.jpeg", "yellowsilk.jpeg"],
+    //         function (texture) {
+    //             addHat(texture);
+    //         } );
+      // setup camera for the scene, looking down the -Z axis
+
+      // add event listener to handle mouse clicks
+
+    //   document.addEventListener('click', onClick, false);
+
+    //   // raycasting is used to determine which objects in the 3D space map to the mouse click location
+
+    //   var raycaster = new THREE.Raycaster();
+    //   var mouse = new THREE.Vector2();
+
+    //   // global variable assigned to canvas element
+
+    //   var c1 = renderer.domElement;
+
+    //   // pressing the shift key while clicking the mouse causes a block in the vicinity to be
+    //   // removed from the scene
+
+    //   function onClick(event) {
+    //      if (!event.shiftKey) return;      // need to press the shift key with mouse click
+    //      if (event.target == c1) {
+    //         // use canvas offset to determine mouse coordinates in canvas coordinate frame
+    //         var rect = event.target.getBoundingClientRect();
+    //         var canvasx = event.clientX - rect.left;
+    //         var canvasy = event.clientY - rect.top;
+    //      } else {
+    //         return;
+    //      }
+    //      // get mouse coordinates in the range from -1 to +1 (canvas is 600 x 600 pixels)
+    //      mouse.x = (canvasx / 600) * 2 - 1;
+    //      mouse.y = -(canvasy / 600) * 2 + 1;
+    //      // setup raycaster using mouse position and camera
+    //      raycaster.setFromCamera(mouse, camera);
+    //      // get array of objects projecting to this mouse position
+    //      var intersects = raycaster.intersectObjects(scene.children);
+    //      // remove first object in the array, which is closest in depth to the camera
+    //      if (intersects.length > 0) {
+    //         scene.remove(intersects[0].object);
+    //         render();
+    //      }
+    //   }
+
+     // render();
 
     </script>
-    <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
+    <!-- <cavas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
 
 </body>
 
