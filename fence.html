@@ -48,7 +48,7 @@
                 side: THREE.BackSide,
                 map: outsideTexture  //TODO: can temporarily comment out to see without local server
             }));
-
+            //outsideMesh.castShadow=true;
         outsideMesh.translateY(250 - (5 + 0.02));
         outsideMesh.position.set(100,455,0);
         scene.add(outsideMesh);
@@ -62,17 +62,18 @@
 
         var groundMesh = new THREE.Mesh(
             new THREE.PlaneGeometry(1500, 1500),
-            new THREE.MeshBasicMaterial({
+            new THREE.MeshPhongMaterial({
                 color: new THREE.Color(0x76552b),
                 specular: new THREE.Color("white"),
-                shininess: 10,
-                flatShading: THREE.FlatShading,
+                shininess: 0,
+                //flatShading: THREE.FlatShading,
                 side: THREE.DoubleSide,
                 map: groundTexture //TODO: can temporarily comment out to see without local server
             }));
 
         groundMesh.translateY(-5 + 0.02);
         groundMesh.rotateX(THREE.Math.degToRad(90));
+        groundMesh.receiveShadow = true;
         scene.add(groundMesh);
 
         var colorMaterials = [new THREE.MeshPhongMaterial({
@@ -96,15 +97,20 @@
         var ambLight = new THREE.AmbientLight(new THREE.Color("white"), 1);
         scene.add(ambLight);
 
-        function addDirLight()
-        {
-            directLight = new THREE.DirectionalLight(0xdddddd, 0.4);
-            directLight.position.set(-50,100,-50);           
-            directLight.target.position.set(0,0,0);   
+        
+            var directLight = new THREE.SpotLight(0xff00ff, 1);
+            directLight.position.set(-300, 800, -235);           
+            directLight.target.position.set(0,0,0);  
+            directLight.castShadow = true; 
+            directLight.shadow.mapSize.width = 2048;
+            directLight.shadow.mapSize.height = 2048;
+            //directLight.shadow.camera.near = 0.5; // 0.5 default
+            //directLight.shadow.camera.far = 700; // 500 default -- described scene requires further far field
+
             scene.add(directLight);
             scene.add(directLight.target);
-        }
-        addDirLight();
+        
+        //addDirLight();
         const axesHelper = new THREE.AxesHelper( 500 );
         scene.add( axesHelper );    
 
@@ -117,6 +123,7 @@
             var geometry = new THREE.BoxGeometry( 6, 40, 6 ); 
             var cube = new THREE.Mesh( geometry, material ); 
             cube.position.set(0,15,0);
+            cube.castShadow = true;
             // scene.add( cube );
             var baseWidth = 17;
             var depth = 40;
@@ -124,6 +131,7 @@
             // Create the prism geometry
             var prismGeometry = new THREE.CylinderGeometry(baseWidth / 2, baseWidth / 2, height, 3);
             var fencetop = new THREE.Mesh(prismGeometry, material);
+            fencetop.castShadow = true;
             fencetop.position.set(0,35,0);
             fencetop.rotation.y = Math.PI;
             fencetop.rotation.x = Math.PI/2;
@@ -138,6 +146,7 @@
         for (var i = 0; i < numPickets; i++)
         {
             fencePick = fencePick.clone();
+            fencePick.castShadow=true;
             fencePick.translateX(20);
             fence.add(fencePick);
         }
@@ -148,6 +157,7 @@
         for (var i = 0; i < numPickets2; i++)
         {
             fencePick = fencePick.clone();
+            fencePick.castShadow=true;
             fencePick.translateZ(20);
             fence2.add(fencePick);
         }
@@ -158,6 +168,7 @@
         for (var i = 0; i < numPickets3; i++)
         {
             fencePick = fencePick.clone();
+            fencePick.castShadow=true;
             fencePick.translateZ(20);
             fence3.add(fencePick);
         }
@@ -166,23 +177,26 @@
 
         var geomf = new THREE.BoxGeometry( 336, 6, 6 ); //w h d
         var bar = new THREE.Mesh( geomf, material ); 
+        bar.castShadow=true;
         bar.position.set(170,15,0);
         scene.add(bar);
         var geomf2 = new THREE.BoxGeometry(6, 200, 6 ); //w h d
         var bar2 = new THREE.Mesh( geomf2, material ); 
+        bar2.castShadow=true;
         bar2.position.set(20,15,80);
         bar2.rotation.x = Math.PI/2;
         scene.add(bar2);
         var geomf3 = new THREE.BoxGeometry(6, 200, 6 ); //w h d
         var bar3 = new THREE.Mesh( geomf3, material ); 
+        bar3.castShadow=true;
         bar3.position.set(320,15,80);
         bar3.rotation.x = Math.PI/2;
         scene.add(bar3);
 
         const sun = new THREE.Mesh( new THREE.SphereGeometry( 75, 32, 16 ), 
                                 new THREE.MeshBasicMaterial({color: 0xffff00, transparent:true, opacity:0.9})); 
-        sun.castShadow = true; 
-        sun.receiveShadow = false;   
+        //sun.castShadow = true; 
+        //sun.receiveShadow = false;   
         sun.position.set(-300, 800, -235);
         scene.add( sun );
 
@@ -191,21 +205,21 @@
         {
             var cloud1 = new THREE.Mesh( new THREE.SphereGeometry( 70, 32, 16 ), 
                                 new THREE.MeshBasicMaterial({color: 0xffffff, transparent:true, opacity:0.9})); 
-            cloud1.castShadow = true; 
-            cloud1.receiveShadow = false;   
+            //cloud1.castShadow = true; 
+            //cloud1.receiveShadow = false;   
             cloud1.position.set(-250, 700, -235);
             cloud_group.add( cloud1 );
             var cloud2 = cloud1.clone();
-            cloud2.castShadow = true; 
-            cloud2.receiveShadow = false;   
+            //cloud2.castShadow = true; 
+            //cloud2.receiveShadow = false;   
             cloud2.position.set(-290, 650, -235);
             cloud_group.add( cloud2 );
             var edgeCloud2 = cloud2.clone()
             edgeCloud2.position.set(-350, 650, -235);
             cloud_group.add(edgeCloud2);
             var cloud3 = cloud1.clone();
-            cloud3.castShadow = true; 
-            cloud3.receiveShadow = false;   
+            //cloud3.castShadow = true; 
+            //cloud3.receiveShadow = false;   
             cloud3.position.set(-210, 650, -235);
             var edgeCloud = cloud3.clone()
             edgeCloud.position.set(-160, 650, -235);
@@ -226,13 +240,23 @@
 
 
 
-
+    var cameraParams = {
+      near: 1,
+      far: 250,
+      fov: 75,                // degrees
+      aspectRatio: 700 / 500,   // from dimensions of the canvas, see CSS
+      atX: 0,
+      atY: 0,
+      atZ: 0,
+      eyeX: 00,
+      eyeY: 0,
+      eyeZ: 150,
+      upX: 0,
+      upY: 1,
+      upZ: 0
+    };
        
-        // ====================================================================
-
-        var renderer = new THREE.WebGLRenderer();
-
-        TW.mainInit(renderer, scene);
+        // ===================================================================
 
         TW.cameraSetup(renderer,
             scene,
@@ -246,6 +270,7 @@
             
 
         TW.viewFromAboveFrontSide();
+        render();
 
 
 
