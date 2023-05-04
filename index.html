@@ -374,7 +374,7 @@ cat.add(head)
             var hatMesh = new THREE.Mesh(hatGeometry, silkMaterial);
             return hatMesh;
         }
-        
+
         var hatframe;
         var hat;
         var bottomHat;
@@ -445,6 +445,44 @@ function onClick(event) {
    }
 }
   renderer.render(scene, camera);
+
+          //need to add keypress callback because we ditched TW script!
+          document.addEventListener("keypress", (event) => {
+            const key = event.key;
+            console.log("Key pressed: " + key);
+            switch (key) {
+                case "1":
+                    scene.remove(camera)
+                    cameraParams.eyeX = 0;
+                    cameraParams.eyeY = 0;
+                    cameraParams.eyeZ = 150;
+                    cameraParams.atX = 0;
+                    cameraParams.atY = 0;
+                    cameraParams.atZ = 0;
+                    camera = setupCamera(cameraParams);
+                    scene.add(camera)
+                    render();
+                    break;
+                case "2":
+                    scene.remove(camera)
+                    cameraParams.eyeX = 20;
+                    cameraParams.eyeY = -18;
+                    cameraParams.eyeZ = 10;
+                    cameraParams.atX = 90;
+                    cameraParams.atY = -48;
+                    cameraParams.atZ = 0;
+                    camera = setupCamera(cameraParams);
+                    scene.add(camera);
+                    render();
+                    break;
+
+                default:
+                    break;
+            }
+            setupCameraControls(); //probably a better way to fix this...
+        });
+
+  // add keypress code 
 </script>
 <script id="allhatscode"></script>
 <!-- <canvas width="2156" height="600" style="width: 2156px; height: 600px;"></canvas> -->
